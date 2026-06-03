@@ -1,0 +1,292 @@
+LINKEDIN-LIKE APPLICATION: OBJECT STORAGE ANALYSIS
+
+=================================================
+1. FEATURES THAT CAN BE IMPLEMENTED USING OBJECT STORAGE
+=================================================
+
+A. USER PROFILE ASSETS
+- Profile Pictures
+- Cover/Banner Images
+- Resume PDFs
+- Portfolio Documents
+- Certificates
+- Video Introductions
+- Audio Files
+
+Example Structure:
+
+profiles/
+   user123/
+      profile.jpg
+      cover.jpg
+      resume.pdf
+      certifications/
+         aws.pdf
+         azure.pdf
+
+-------------------------------------------------
+
+B. FEED MEDIA CONTENT
+- Images
+- Videos
+- PDFs
+- Presentations
+- Infographics
+
+Example Structure:
+
+posts/
+   post567/
+      image1.jpg
+      video.mp4
+      attachment.pdf
+
+Database stores:
+- PostID
+- UserID
+- Caption
+- Object URL
+- Timestamp
+- Likes Count
+
+-------------------------------------------------
+
+C. COMPANY PAGE ASSETS
+- Company Logos
+- Cover Images
+- Brochures
+- Annual Reports
+- Marketing Videos
+
+-------------------------------------------------
+
+D. JOB POSTING ATTACHMENTS
+- Job Descriptions
+- Hiring Brochures
+- Interview Guides
+
+-------------------------------------------------
+
+E. LEARNING PLATFORM CONTENT
+- Course Videos
+- PDFs
+- Assignments
+- Images
+
+-------------------------------------------------
+
+F. MESSAGING ATTACHMENTS
+- Images
+- Documents
+- Videos
+
+-------------------------------------------------
+
+G. STATIC WEBSITE ASSETS
+- CSS
+- JavaScript Bundles
+- Fonts
+- Icons
+
+-------------------------------------------------
+
+H. ANALYTICS LOGS
+- Clickstream Data
+- User Activity Logs
+- Feed Interaction Events
+
+-------------------------------------------------
+
+I. PROFILE VERSION HISTORY
+- Previous Profile Pictures
+- Previous Resumes
+- Historical Documents
+
+=================================================
+2. FEATURES NOT SUITABLE FOR OBJECT STORAGE
+=================================================
+
+A. USER PROFILE DATA
+- Name
+- Headline
+- Experience
+- Skills
+- Education
+- Connections
+
+Requires:
+- SQL Database
+- NoSQL Database
+
+-------------------------------------------------
+
+B. SOCIAL GRAPH
+Connection relationships require:
+- Graph Database
+- NoSQL Database
+
+-------------------------------------------------
+
+C. FEED GENERATION
+Requires:
+- Ranking Algorithms
+- Recommendation Systems
+- Caching
+
+-------------------------------------------------
+
+D. LIKES AND COMMENTS
+Requires:
+- High-throughput Transactional Databases
+
+-------------------------------------------------
+
+E. SEARCH
+People, Companies, Jobs, Skills
+
+Requires:
+- Elasticsearch/OpenSearch
+- Azure AI Search
+
+-------------------------------------------------
+
+F. NOTIFICATIONS
+Requires:
+- Event Streaming
+- Message Queues
+
+-------------------------------------------------
+
+G. MESSAGING METADATA
+- Sender
+- Receiver
+- Timestamp
+- Read Status
+
+Requires:
+- Database Storage
+
+=================================================
+3. ARCHITECTURE SPLIT
+=================================================
+
+OBJECT STORAGE:
+✓ Profile Pictures
+✓ Resumes
+✓ Certificates
+✓ Feed Images
+✓ Feed Videos
+✓ Job Documents
+✓ Company Assets
+✓ Static Website Assets
+✓ Learning Content
+✓ Messaging Attachments
+✓ Analytics Logs
+
+DATABASE:
+✓ User Profiles
+✓ Connections
+✓ Feed Ranking
+✓ Likes
+✓ Comments
+✓ Search Indexes
+✓ Notifications
+✓ Messaging Metadata
+
+=================================================
+4. AMAZON S3 VS AZURE BLOB STORAGE
+=================================================
+
+AMAZON S3
+
+Pros:
+- Industry-standard object storage
+- Mature ecosystem
+- Strong event-driven architecture
+- Lifecycle management
+- Cross-region replication
+- Tight CloudFront integration
+- Massive community support
+
+Example Workflow:
+
+User Upload
+      ↓
+Amazon S3
+      ↓
+S3 Event
+      ↓
+Lambda Function
+      ↓
+Thumbnail Generation
+
+Cons:
+- Complex IAM policies
+- Steeper AWS learning curve
+
+-------------------------------------------------
+
+AZURE BLOB STORAGE
+
+Pros:
+- Strong Microsoft ecosystem integration
+- Azure Entra ID integration
+- Azure Functions integration
+- Azure AI Search integration
+- Data Lake Gen2 support
+- Enterprise governance
+
+Cons:
+- Smaller ecosystem
+- Fewer third-party integrations
+- Less community adoption than S3
+
+=================================================
+5. COMPARISON TABLE
+=================================================
+
+Requirement                     Amazon S3     Azure Blob
+---------------------------------------------------------
+Media Storage                   Excellent     Excellent
+Profile Images                  Excellent     Excellent
+Resume Storage                  Excellent     Excellent
+Video Storage                   Excellent     Excellent
+Global Scale                    Excellent     Very Good
+Event Processing                Excellent     Very Good
+Ecosystem                       Excellent     Good
+Analytics Lake                  Very Good     Excellent
+CDN Integration                 Excellent     Very Good
+Community Support               Excellent     Good
+LinkedIn Platform Fit           Excellent     Very Good
+
+=================================================
+6. FINAL RECOMMENDATION
+=================================================
+
+Recommended Choice: AMAZON S3
+
+Reasons:
+
+1. Most mature object storage platform.
+2. Better ecosystem for social media applications.
+3. Superior event-driven architecture support.
+4. Excellent CDN integration.
+5. Strong lifecycle management for resumes,
+   certificates, and historical content.
+6. Larger community and operational expertise.
+
+Final Score:
+
+Amazon S3      : 9.5 / 10
+Azure Blob     : 8.5 / 10
+
+Conclusion:
+
+For a LinkedIn-like platform, Amazon S3 should be used as
+the primary object storage service for profile media,
+resumes, certificates, feed content, learning videos,
+company assets, messaging attachments, and static assets.
+
+Relational/NoSQL databases should be used for user
+profiles, social graph, feed generation, likes,
+comments, notifications, messaging metadata, and search.
