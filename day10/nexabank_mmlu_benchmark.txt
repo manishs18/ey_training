@@ -1,0 +1,187 @@
+MMLU Benchmark — Deep Dive
+What is MMLU?
+
+MMLU (Massive Multitask Language Understanding) is one of the most widely used benchmarks for evaluating the knowledge and reasoning abilities of Large Language Models (LLMs). It was introduced by researchers led by Dan Hendrycks and contains approximately 15,908 multiple-choice questions across 57 subjects.
+
+The goal is to measure whether a model can answer questions spanning:
+
+Mathematics
+Computer Science
+Physics
+Biology
+Law
+Medicine
+Economics
+Psychology
+History
+Philosophy
+Business
+Humanities
+
+and many other academic disciplines.
+
+How MMLU Works
+
+A model receives a multiple-choice question:
+
+Example
+
+What is the capital of France?
+
+A. Berlin
+B. Madrid
+C. Paris
+D. Rome
+
+Expected Answer:
+
+C. Paris
+
+The model's performance is measured using Accuracy:
+
+Accuracy = Correct Answers / Total Questions
+
+A score of:
+
+90%
+
+means the model answered 90% of questions correctly.
+
+Why MMLU Became Important
+
+Before MMLU, benchmarks such as GLUE were becoming too easy for modern models.
+
+MMLU attempted to test:
+
+Broad world knowledge
+Professional knowledge
+Academic reasoning
+Cross-domain understanding
+
+For several years it became the "headline benchmark" used in model launches.
+
+Subject Categories
+
+The 57 subjects are typically grouped into:
+
+Category	Examples
+STEM	Physics, Chemistry, Math
+Social Sciences	Economics, Sociology
+Humanities	History, Philosophy
+Professional	Law, Medicine, Accounting
+Other	Business, Psychology
+
+Why Recruiters and AI Engineers Care About MMLU
+
+MMLU is often treated as a rough measure of:
+
+General Intelligence
++
+Knowledge Recall
++
+Basic Reasoning
+
+When evaluating models:
+
+Model A = 70%
+Model B = 85%
+
+Model B generally possesses stronger academic knowledge.
+
+However, this does not necessarily mean Model B is better at:
+
+Coding
+Tool use
+Agent workflows
+Long-context reasoning
+Real-world business tasks
+
+Limitations of MMLU
+1. Benchmark Saturation
+
+Modern frontier models now score very similarly.
+
+Typical top-model scores cluster around:
+
+89% - 92%
+
+making it difficult to distinguish between the best models.
+
+2. Data Contamination
+
+The benchmark has been public for years.
+
+Some benchmark questions may have appeared in training data.
+
+Result:
+
+Memorization
+≠
+True reasoning
+
+Researchers created contamination-resistant variants because of this concern.
+
+3. Multiple-Choice Bias
+
+Real-world AI systems rarely solve problems as:
+
+A
+B
+C
+D
+
+questions.
+
+An LLM might score highly on MMLU but still struggle with:
+
+Complex workflows
+Multi-step reasoning
+Production systems
+
+MMLU vs MMLU-Pro
+
+Because MMLU became saturated, researchers introduced MMLU-Pro.
+
+Improvements
+MMLU	MMLU-Pro
+4 choices	10 choices
+Easier questions	Harder reasoning questions
+Some noisy items	Cleaned dataset
+Knowledge-heavy	More reasoning-focused
+
+MMLU-Pro typically lowers scores by 16–33 percentage points, making it much more discriminative.
+
+Related Benchmarks
+MMLU
+
+Measures:
+
+Knowledge + Light Reasoning
+GPQA
+
+Measures:
+
+Graduate-level scientific reasoning
+
+Often considered better than MMLU for distinguishing top models.
+
+MMMU
+
+Extends MMLU into multimodal AI.
+
+Example:
+
+Images
+Charts
+Diagrams
+Tables
+
+combined with reasoning tasks.
+
+Common Interview Question
+
+Q: Is MMLU a reasoning benchmark?
+
+Answer:
+Partially. MMLU primarily measures broad academic and professional knowledge with some reasoning. It is not a pure reasoning benchmark. Modern evaluations often combine MMLU with benchmarks such as GPQA, HumanEval, SWE-bench, and MMMU to obtain a more complete picture of model capability.
+
