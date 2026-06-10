@@ -1,0 +1,98 @@
+NexaBank GenAI Business Challenges
+
+  -------------------------------------------------------------------------------------------------------------------------
+  Card           Business        GenAI Type         Recommended   About the Model     Why It Fits          Expected
+                 Challenge                          Model                                                  Benefits
+  -------------- --------------- ------------------ ------------- ------------------- -------------------- ----------------
+  A –            NexaBank        Text               Claude 3.5    Claude 3.5 Sonnet   It can automatically Faster email
+  Multilingual   receives 8,000  Classification +   Sonnet (Alt:  is excellent at     detect the language, routing, reduced
+  Email Triage   customer emails Text Generation    GPT-4o)       multilingual        understand customer  manual effort,
+                 daily in 12                                      understanding,      intent, classify     improved
+                 languages.                                       document analysis,  emails into          response times,
+                 Agents spend                                     classification, and categories,          lower
+                 about 7 minutes                                  generating          prioritize urgent    operational
+                 per email                                        human-like          cases, generate      costs, and
+                 manually                                         responses.          summaries, and       higher customer
+                 reading,                                                             suggest replies.     satisfaction.
+                 categorizing,                                                                             
+                 and routing                                                                               
+                 requests to the                                                                           
+                 correct                                                                                   
+                 department.                                                                               
+
+  B – Regulatory The compliance  Document           Claude 3.5    Claude is highly    It can read lengthy  Reduced analyst
+  Update Review  team reviews    Summarization &    Sonnet (Alt:  capable of          regulatory updates,  workload, faster
+                 300-page        Information        GPT-4o)       processing long     identify important   compliance
+                 regulatory      Extraction                       documents while     changes, summarize   reviews,
+                 documents every                                  retaining context   key points, and      improved
+                 month, and                                       and extracting key  highlight actions    accuracy, and
+                 nearly 40% of                                    information         required by          quicker response
+                 analyst time is                                  accurately.         compliance teams.    to regulatory
+                 spent manually                                                                            changes.
+                 identifying and                                                                           
+                 extracting                                                                                
+                 important                                                                                 
+                 regulatory                                                                                
+                 changes.                                                                                  
+
+  C – Fraud      The fraud team  Text Generation    GPT-4o (Alt:  GPT-4o is highly    It can convert       Better customer
+  Alert          needs to                           Claude 3.5    effective at        complex fraud        communication,
+  Narratives     provide                            Sonnet)       generating natural, detection outcomes   reduced
+                 customers with                                   clear, and          into                 confusion, fewer
+                 plain-English                                    context-aware       easy-to-understand   support calls,
+                 explanations                                     customer            explanations and     and faster fraud
+                 for transaction                                  communications in   generate             notification
+                 declines within                                  real time.          personalized         processes.
+                 2 minutes to                                                         customer messages    
+                 improve                                                              instantly.           
+                 transparency                                                                              
+                 and customer                                                                              
+                 experience.                                                                               
+
+  D – Synthetic  The fraud       Synthetic Data     GPT-4o (Alt:  These models can    They can create      Improved model
+  Fraud Training detection team  Generation         Llama 3)      generate realistic  large volumes of     accuracy,
+  Data           lacks 50,000                                     artificial datasets synthetic fraud      enhanced fraud
+                 labeled fraud                                    that resemble       transactions and     detection
+                 samples needed                                   real-world patterns labels that help     capabilities,
+                 to train                                         without exposing    train and test fraud GDPR compliance,
+                 machine                                          sensitive customer  detection systems    and reduced
+                 learning models                                  information.        while maintaining    dependency on
+                 but cannot use                                                       privacy compliance.  real customer
+                 real customer                                                                             data.
+                 data because of                                                                           
+                 GDPR and                                                                                  
+                 privacy                                                                                   
+                 regulations.                                                                              
+
+  E –            The product     Content Generation GPT-4o (Alt:  GPT-4o excels at    It can generate      Faster campaign
+  Personalized   team needs 200                     Claude 3.5    creating engaging,  multiple versions of creation,
+  Marketing Copy A/B testing                        Sonnet)       personalized, and   emails,              increased
+                 marketing copy                                   audience-specific   advertisements, and  customer
+                 variations for                                   marketing content   campaign messages    engagement,
+                 savings product                                  at scale.           tailored to          improved
+                 campaigns                                                            different customer   conversion
+                 across 5                                                             groups and marketing rates, and more
+                 different                                                            objectives.          effective A/B
+                 customer                                                                                  testing.
+                 segments.                                                                                 
+
+  F – Developer  Developers      Code Generation    GPT-4o (Alt:  GPT-4o can          It can automatically Increased
+  Boilerplate    currently write                    Claude 3.5    generate, explain,  create API           developer
+  Generation     around 600                         Sonnet)       optimize, and       integration          productivity,
+                 lines of                                         document code       templates,           faster project
+                 repetitive                                       across various      boilerplate code,    delivery, fewer
+                 boilerplate                                      programming         documentation, and   coding errors,
+                 code for each                                    languages and       test cases, reducing and reduced
+                 new API                                          frameworks.         repetitive           development
+                 integration,                                                         development work.    costs.
+                 and                                                                                       
+                 approximately                                                                             
+                 40% of this                                                                               
+                 effort could be                                                                           
+                 automated.                                                                                
+  -------------------------------------------------------------------------------------------------------------------------
+
+Quick Memory Formula: A → Emails → Classification B → Regulations →
+Summarization C → Fraud Messages → Text Generation D → Fraud Samples →
+Synthetic Data E → Marketing Campaigns → Content Generation F → Coding →
+Code Generation

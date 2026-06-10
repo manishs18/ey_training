@@ -1,0 +1,198 @@
+Sequence-to-Sequence (Seq2Seq) Architecture
+What is Seq2Seq?
+
+Sequence-to-Sequence (Seq2Seq) is a deep learning architecture that converts one sequence into another sequence.
+
+Examples:
+
+English → French translation
+Question → Answer
+Speech → Text
+Long text → Summary
+User message → Chatbot response
+Basic Idea
+
+A Seq2Seq model consists of two main parts:
+
+1. Encoder
+
+Reads the input sequence and converts it into a numerical representation (context vector).
+
+2. Decoder
+
+Uses the context vector to generate the output sequence one token at a time.
+
+Input Sentence
+      ↓
+    Encoder
+      ↓
+ Context Vector
+      ↓
+    Decoder
+      ↓
+Output Sentence
+Example: Language Translation
+
+Input:
+
+I love machine learning
+
+Expected Output:
+
+J'aime l'apprentissage automatique
+Step 1: Encoder
+
+The encoder reads the input words sequentially.
+
+I → love → machine → learning
+
+After processing all words, it produces a hidden state (context vector).
+
+Context Vector = Meaning of entire sentence
+Step 2: Decoder
+
+The decoder starts with a special token:
+
+<START>
+
+Then generates:
+
+J'
+↓
+aime
+↓
+l'apprentissage
+↓
+automatique
+↓
+<END>
+Traditional Seq2Seq using RNN/LSTM
+
+Architecture:
+
+Input Words
+      ↓
+     LSTM
+      ↓
+Context Vector
+      ↓
+     LSTM
+      ↓
+Output Words
+
+Advantages:
+
+Handles variable-length input/output.
+Better than simple feedforward networks.
+
+Limitations:
+
+Information bottleneck.
+Long sentences are difficult to remember.
+Performance decreases with long sequences.
+Attention Mechanism
+
+To overcome the bottleneck problem, Attention was introduced.
+
+Instead of relying on a single context vector, the decoder can focus on relevant input words during generation.
+
+Example:
+
+Input:
+
+The cat sat on the mat
+
+While generating:
+
+chat
+
+the decoder pays more attention to:
+
+cat
+
+Architecture:
+
+Input Sentence
+      ↓
+    Encoder
+      ↓
+Hidden States
+      ↓
+   Attention
+      ↓
+    Decoder
+
+Benefits:
+
+Better translation quality.
+Handles long sequences.
+Improved accuracy.
+Transformer-Based Seq2Seq
+
+Modern models replace RNNs/LSTMs with Transformers.
+
+Examples:
+
+T5
+BART
+MarianMT
+
+Architecture:
+
+Input
+  ↓
+Transformer Encoder
+  ↓
+Attention Layers
+  ↓
+Transformer Decoder
+  ↓
+Output
+
+Advantages:
+
+Parallel processing.
+Better scalability.
+Handles long contexts.
+State-of-the-art performance.
+Applications of Seq2Seq
+Machine Translation
+English → French
+Text Summarization
+100-page document
+      ↓
+1-page summary
+Chatbots
+User Question
+      ↓
+Bot Response
+Speech Recognition
+Audio
+      ↓
+Text
+Question Answering
+Question
+      ↓
+Answer
+Seq2Seq vs LLM
+Feature	Seq2Seq	LLM
+Architecture	Encoder + Decoder	Usually Decoder-only (GPT)
+Input	Sequence	Sequence
+Output	Sequence	Sequence
+Translation	Excellent	Excellent
+Summarization	Excellent	Excellent
+Text Generation	Good	Excellent
+Examples	T5, BART	GPT, Llama, Claude
+Advantages
+Handles variable-length inputs and outputs.
+Suitable for translation and summarization.
+Can learn complex sequence relationships.
+Attention improves long-sequence performance.
+Limitations
+Traditional RNN/LSTM versions struggle with long sequences.
+Training can be computationally expensive.
+Requires large datasets for high-quality results.
+Interview Answer (1 Minute)
+
+A Sequence-to-Sequence (Seq2Seq) architecture is a neural network model that transforms one sequence into another sequence. It consists of an Encoder that processes the input sequence and a Decoder that generates the output sequence. Traditional Seq2Seq models used RNNs or LSTMs, while modern implementations use Transformers with Attention mechanisms. Seq2Seq is widely used in machine translation, text summarization, chatbots, speech recognition, and question answering systems. The Attention mechanism allows the decoder to focus on relevant parts of the input, significantly improving performance on long sequences.
+
