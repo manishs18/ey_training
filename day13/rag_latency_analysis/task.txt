@@ -1,0 +1,101 @@
+Task 1 (Day 13 – Colab 2): Cause of latency variation
+
+The latency variation in the pipeline is mainly driven by the Claude generation stage, and it can be explained using quality metrics:
+
+BLEU / ROUGE correlation
+Higher BLEU and ROUGE indicate longer and more reference-aligned outputs.
+These outputs require more tokens to generate, increasing decode time.
+This is why spikes (like Q3, Q6, Q7) show much higher latency.
+Faithfulness impact
+Higher faithfulness means the model is more strictly grounded in retrieved context.
+This increases:
+context usage
+reasoning depth
+prompt size
+Result: slower generation time.
+
+Conclusion (Task 1):
+
+Latency variation is primarily caused by fluctuations in generation complexity driven by BLEU/ROUGE (output length/coverage) and faithfulness (degree of retrieval grounding), which directly affect Claude’s decode time.
+
+
+
+
+
+
+Task 2: Stage-wise interpretation in metric terms
+
+We map each pipeline stage to quality/behavior metrics:
+
+Embed Query (Blue)
+Not directly tied to BLEU/ROUGE or faithfulness
+Represents query representation quality
+Minor impact on overall quality, negligible latency variation
+Azure Retrieve (Orange)
+Affects faithfulness strongly
+Better retrieval ⇒ higher faithfulness
+Slight latency variation due to retrieval depth
+Claude Generate (Green) — dominant factor
+Directly correlated with:
+BLEU ↑ → more accurate / longer generation
+ROUGE ↑ → higher overlap with retrieved/reference text
+Faithfulness ↑ → stronger grounding in retrieved context
+This stage explains almost all latency spikes
+
+Conclusion (Task 2):
+
+BLEU and ROUGE mainly reflect output quality and length, while faithfulness reflects retrieval grounding; all three primarily impact the Claude generation stage, which dominates end-to-end latency variation.
+
+
+
+
+
+
+Question  ->   what is self consistency in PE
+
+If by PE you mean Prompt Engineering, self-consistency is a prompting technique used to improve reasoning accuracy.
+
+Instead of asking a language model for one chain of thought, you ask it to generate multiple independent reasoning paths for the same problem. Then you select the answer that appears most often (majority vote) or aggregate the results.
+
+Basic idea
+
+Standard prompting
+
+Question: If a train travels 60 km in 1 hour, how far does it travel in 3 hours?
+
+Model reasoning → 180 km
+
+Self-consistency prompting
+
+Generate 5 different reasoning paths.
+Path 1 → 180 km
+Path 2 → 180 km
+Path 3 → 180 km
+Path 4 → 200 km
+Path 5 → 180 km
+
+Most common answer = 180 km
+
+The intuition is that incorrect reasoning paths tend to vary, while the correct answer is more likely to emerge repeatedly across different reasoning attempts.
+
+Why it helps
+Reduces the impact of a single flawed reasoning path.
+Improves performance on math, logic, and multi-step reasoning tasks.
+Works especially well when combined with chain-of-thought prompting.
+Typical workflow
+Ask the model to reason through the problem.
+Sample multiple responses (using some randomness).
+Extract the final answer from each response.
+Choose the most frequent answer.
+Example prompt
+Solve the problem step by step.
+Generate 10 independent solutions.
+At the end of each solution, provide a final answer.
+
+Then aggregate the 10 answers and select the majority result.
+
+Limitation
+
+Self-consistency increases inference cost because the model must generate several solutions instead of one. If the model lacks the necessary knowledge, generating more reasoning paths won't necessarily fix the problem.
+
+In modern LLM prompting, self-consistency is often described as "sample multiple reasoning traces and vote on the answer".

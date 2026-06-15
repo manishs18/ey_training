@@ -1,0 +1,4 @@
+query_id,question,answer,ground_truth,contexts,latency_ms,bleu,rougeL,context_tokens,answer_tokens,total_tokens
+Q1,...,...,...,...,820,1.821831989445342e-231,0,3,1,4
+Q2,...,...,...,...,910,1.821831989445342e-231,0,3,1,4
+Q3,...,...,...,...,9750,1.821831989445342e-231,0,3,1,4
