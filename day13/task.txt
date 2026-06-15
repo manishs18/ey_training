@@ -1,0 +1,47 @@
+Task 1 (Day 13 – Colab 2): Cause of latency variation
+
+The latency variation in the pipeline is mainly driven by the Claude generation stage, and it can be explained using quality metrics:
+
+BLEU / ROUGE correlation
+Higher BLEU and ROUGE indicate longer and more reference-aligned outputs.
+These outputs require more tokens to generate, increasing decode time.
+This is why spikes (like Q3, Q6, Q7) show much higher latency.
+Faithfulness impact
+Higher faithfulness means the model is more strictly grounded in retrieved context.
+This increases:
+context usage
+reasoning depth
+prompt size
+Result: slower generation time.
+
+Conclusion (Task 1):
+
+Latency variation is primarily caused by fluctuations in generation complexity driven by BLEU/ROUGE (output length/coverage) and faithfulness (degree of retrieval grounding), which directly affect Claude’s decode time.
+
+
+
+
+
+
+Task 2: Stage-wise interpretation in metric terms
+
+We map each pipeline stage to quality/behavior metrics:
+
+Embed Query (Blue)
+Not directly tied to BLEU/ROUGE or faithfulness
+Represents query representation quality
+Minor impact on overall quality, negligible latency variation
+Azure Retrieve (Orange)
+Affects faithfulness strongly
+Better retrieval ⇒ higher faithfulness
+Slight latency variation due to retrieval depth
+Claude Generate (Green) — dominant factor
+Directly correlated with:
+BLEU ↑ → more accurate / longer generation
+ROUGE ↑ → higher overlap with retrieved/reference text
+Faithfulness ↑ → stronger grounding in retrieved context
+This stage explains almost all latency spikes
+
+Conclusion (Task 2):
+
+BLEU and ROUGE mainly reflect output quality and length, while faithfulness reflects retrieval grounding; all three primarily impact the Claude generation stage, which dominates end-to-end latency variation.
