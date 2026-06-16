@@ -1,0 +1,12 @@
+numpy
+pandas
+matplotlib
+
+bert-score
+sentence-transformers
+transformers
+
+torch==2.2.2
+
+scikit-learn
+scipy
