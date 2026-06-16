@@ -1,12 +1,15 @@
-numpy
-pandas
-matplotlib
-
-bert-score
-sentence-transformers
-transformers
+numpy==1.26.4
+pandas==2.2.2
 
 torch==2.2.2
 
-scikit-learn
-scipy
+transformers==4.41.0
+sentence-transformers==3.0.1
+
+bert-score==0.3.13
+scikit-learn==1.5.1
+scipy==1.11.4
+
+matplotlib==3.8.4
+tqdm
+requests

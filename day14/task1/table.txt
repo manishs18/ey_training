@@ -1,0 +1,13 @@
+| Feature           | LangChain              | LlamaIndex                   | Haystack                    |
+| ----------------- | ---------------------- | ---------------------------- | --------------------------- |
+| Primary Focus     | Agent Orchestration    | Data / RAG pipelines         | Search & Retrieval          |
+| Learning Curve    | Medium–High            | Medium                       | Low–Medium                  |
+| Guardrail Support | Callbacks / LCEL hooks | Callbacks / query pipeline   | Custom nodes                |
+| Observability     | LangSmith (paid)       | LlamaTrace / Arize           | deepset Cloud / DIY         |
+| Best For          | Complex agents + tools | Document Q&A, enterprise RAG | On-prem search + evaluation |
+| Streaming Support | LCEL native            | v0.10+ streaming             | v2.x streaming              |
+
+
+LangChain → best for multi-step agents + tool calling
+LlamaIndex → best for document-based RAG systems
+Haystack → best for search-heavy / enterprise retrieval systems

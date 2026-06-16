@@ -1,0 +1,36 @@
+Q12. Mini Case Study (5 Marks)
+Framework Chosen:
+
+LangChain / LlamaIndex (for RAG pipeline) + FastAPI (for deployment) + Hugging Face Transformers (for classification)
+
+Step 1: Email Ingestion & Preprocessing
+Emails are received daily (10,000/day)
+Text cleaning, deduplication, and metadata extraction
+Store in a database / vector store (e.g., FAISS or Pinecone)
+Step 2: Email Classification
+Use a fine-tuned Transformer model (BERT / RoBERTa) via Hugging Face
+Classify emails into predefined categories:
+Billing
+Delivery issue
+Refund
+Complaint, etc.
+Step 3: Document Retrieval (RAG System)
+Use LangChain / LlamaIndex to implement Retrieval-Augmented Generation
+Retrieve relevant policy documents from:
+Vector database (FAISS / Weaviate)
+Provide context to LLM for response generation
+Step 4: Response Generation
+LLM (GPT-style model or open-source LLM like LLaMA)
+Generates draft replies using:
+Classified category
+Retrieved policy context
+Step 5: Escalation Logic
+Rule-based or ML-based confidence threshold:
+Low confidence OR complex query → escalate
+Trigger ticket creation via Ticketing API (e.g., Zendesk / Jira API)
+Justification:
+LangChain/LlamaIndex enables efficient RAG pipeline for policy-grounded responses
+Transformers provide strong accuracy for email classification
+Vector DB (FAISS/Pinecone) ensures fast retrieval of relevant policies
+FastAPI allows scalable deployment for real-time email processing
+System ensures automation + accuracy + human fallback for complex cases, improving efficiency and customer satisfaction
