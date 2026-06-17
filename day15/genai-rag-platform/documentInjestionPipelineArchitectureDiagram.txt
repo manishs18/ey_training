@@ -1,0 +1,27 @@
+                    ┌─────────────────────┐
+                    │ Upload Document     │
+                    │ PDF / DOCX / TXT    │
+                    └──────────┬──────────┘
+                               │
+                               ▼
+                    ┌─────────────────────┐
+                    │ Azure Service Bus   │
+                    │     Queue           │
+                    └──────────┬──────────┘
+                               │
+                               ▼
+                    ┌─────────────────────┐
+                    │ Queue Worker        │
+                    │                     │
+                    │ Read Message        │
+                    │ Extract Text        │
+                    │ Chunk Content       │
+                    │ Generate Embedding  │
+                    └──────────┬──────────┘
+                               │
+                               ▼
+                    ┌─────────────────────┐
+                    │ Vector Database     │
+                    │ pgvector            │
+                    │ Azure AI Search     │
+                    └─────────────────────┘

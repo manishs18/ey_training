@@ -1,0 +1,79 @@
+Step 1: Document Upload
+
+
+
+
+User Uploads PDF
+        │
+        ▼
+Azure Service Bus Queue
+        │
+        ▼
+Worker Reads Document
+        │
+        ▼
+Chunking
+        │
+        ▼
+Embeddings
+        │
+        ▼
+Store in pgvector
+
+
+
+
+
+
+Step 2: User Question
+
+
+
+User Question:
+"What is the refund policy?"
+
+        │
+        ▼
+
+FastAPI /chat
+
+        │
+        ▼
+
+Generate Query Embedding
+
+        │
+        ▼
+
+Vector Search
+
+        │
+        ▼
+
+Top 5 Relevant Chunks
+
+        │
+        ▼
+
+Build Prompt
+
+Context:
+<retrieved chunks>
+
+Question:
+What is refund policy?
+
+        │
+        ▼
+
+LLM Router
+
+        │
+        ├── Azure OpenAI
+        ├── Claude
+        └── HuggingFace
+
+        │
+        ▼
+
+Answer Returned

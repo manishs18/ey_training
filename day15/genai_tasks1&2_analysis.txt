@@ -1,0 +1,162 @@
+========================================================================
+GENAI OPERATIONS LAB: TASK ANALYSIS & RESOLUTION GUIDE
+========================================================================
+
+------------------------------------------------------------------------
+TASK 1: CORPORATE FINANCIAL REPORT SYNTHESIS
+------------------------------------------------------------------------
+
+[QUESTION / PROMPT]
+"A tech company reports: Revenue up 12% YoY, but gross margins fell from 68% to 61%, operating expenses rose 31%, and the CFO mentioned 'investment in AI infrastructure.' The CEO said growth is 'on track.' Is this a healthy quarter? What should an analyst flag?"
+
+[DIAGRAM: PIPELINE ROUTING AND LOGICAL ANALYSIS FLOW]
+
+                      +--------------------------+
+                      |  Incoming Chat Stream    |
+                      +--------------------------+
+                                    |
+                                    v
+                      +--------------------------+
+                      |  Cost Router             |
+                      |  (gpt-4o-mini / Haiku)   |
+                      +--------------------------+
+                                    |
+                    [Complex / Strategic Evaluation]
+                                    v
+                      +--------------------------+
+                      |   Expert Model Tier      |
+                      |   (Claude Opus / GPT-4o) |
+                      +--------------------------+
+                                    |
+         +--------------------------+--------------------------+
+         |                          |                          |
+         v                          v                          v
++------------------+       +------------------+       +------------------+
+| FORENSIC AUDIT   |       | NARRATIVE GAP    |       | PROACTIVE ACTION |
+| Gross Margin     |       | CEO Optimism vs. |       | Generate earnings|
+| Compression      |       | 31% Opex Spike   |       | call follow-ups  |
++------------------+       +------------------+       +------------------+
+
+[ANSWER / ANALYSIS]
+An analyst must conclude that this is an unhealthy, high-risk quarter despite the superficial 12% top-line revenue growth. The following specific red flags must be raised:
+
+1. Severe Gross Margin Compression:
+   A drop from 68% to 61% indicates that the core cost of goods/services sold is scaling faster than revenue. The company is losing its structural profitability.
+
+2. Runaway Operating Expenses (Opex):
+   A 31% spike in Opex completely outpaces the 12% revenue growth. This creates immediate cash-flow pressure and margin erosion further down the income statement.
+
+3. The Executive Disconnect:
+   There is a clear mismatch between the CEO's optimistic narrative ("growth is on track") and the CFO's justification ("investment in AI infrastructure"). An analyst must interrogate whether this 31% spike represents a temporary capital investment or a permanent, structural increase in operating baseline costs.
+
+4. Next Steps for Management:
+   Formulate targeted questions for the earnings call to force disclosure on the ROI timeline of the AI infrastructure and the exact timeline for gross margin stabilization.
+
+
+------------------------------------------------------------------------
+TASK 2: RETAIL CUSTOMER RETURN EXCEPTION
+------------------------------------------------------------------------
+
+[QUESTION / PROMPT]
+"A customer bought a jacket 47 days ago. Your return policy is 45 days. The customer says the zipper broke on day 44 but they were travelling. No receipt, but the order is in your system. They're a 6-year customer with 23 orders. Should you accept the return? Write one paragraph with reasoning."
+
+[DIAGRAM: CONSTRAINED POLICY EXCEPTION PROCESSING]
+
+                      +--------------------------+
+                      |  Incoming Chat Stream    |
+                      +--------------------------+
+                                    |
+                                    v
+                      +--------------------------+
+                      |  Cost Router             |
+                      |  (gpt-4o-mini / Haiku)   |
+                      +--------------------------+
+                                    |
+                     [Standard Policy Evaluation]
+                                    v
+                      +--------------------------+
+                      |   Lightweight Tier       |
+                      |   (gpt-4o-mini / Haiku)  |
+                      +--------------------------+
+                                    |
+                       [Prefix: Prompt Caching]
+                                    v
+                      +--------------------------+
+                      |  Context: Return Policy  |
+                      |  & Loyalty Guidelines    |
+                      +--------------------------+
+                                    |
+                        [Guard: max_tokens=150]
+                                    v
+                      +--------------------------+
+                      |   Output Generation      |
+                      |   (Single Paragraph)     |
+                      +--------------------------+
+
+[ANSWER / ANALYSIS]
+Yes, you should accept the return as a high-value customer retention exception. While the request technically falls 2 days outside the standard 45-day return policy and lacks a physical receipt, the customer's identity and transactional history are fully verified within your system. Given their exceptional 6-year loyalty and a substantial track record of 23 successful orders, strict enforcement of the deadline poses a disproportionate risk of alienating a highly profitable customer over a mechanical defect (a broken zipper) that occurred within the warranty frame. Processing the return via store credit preserves long-term customer lifetime value (LTV) while demonstrating flexible, empathetic customer service.
+
+
+------------------------------------------------------------------------
+TASK 3: CLINICAL NOTE RISK FLAGGING
+------------------------------------------------------------------------
+
+[QUESTION / PROMPT]
+"Summarise this patient note and flag any clinical or documentation risks: 'Pt c/o chest pain ×2 days. Vitals stable. EKG done - unremarkable. Discharged home with ibuprofen and advised to follow up if symptoms worsen. No troponin ordered. Attending noted time pressure due to ED volume.'"
+
+[DIAGRAM: EMERGENCY CLINICAL & LEGAL ESCALATION FLOW]
+
+                      +--------------------------+
+                      |  Incoming Patient Note   |
+                      +--------------------------+
+                                    |
+                                    v
+                      +--------------------------+
+                      |  Cost Router             |
+                      |  (gpt-4o-mini / Haiku)   |
+                      +--------------------------+
+                                    |
+                    [Critical Liability Validation]
+                                    v
+                      +--------------------------+
+                      |   Expert Model Tier      |
+                      |   (Claude Opus / GPT-4o) |
+                      +--------------------------+
+                                    |
+         +--------------------------+--------------------------+
+         |                          |                          |
+         v                          v                          v
++------------------+       +------------------+       +------------------+
+| CLINICAL DEFECT  |       | DEFENSIVE RISK   |       | QUALITY AUDIT    |
+| Missed Troponin  |       | Written Admission|       | Immediate Peer   |
+| Diagnostic Standard      | of Time Pressure |       | Review Alert     |
++------------------+       +------------------+       +------------------+
+
+[ANSWER / ANALYSIS]
+
+SUMMARY:
+A patient presenting with a two-day history of chest pain was evaluated in the Emergency Department. Vital signs were stable, and an electrocardiogram (EKG) was unremarkable. The patient was discharged home on ibuprofen with instructions to return or follow up if symptoms escalate. Notably, no troponin or cardiac biomarker panels were ordered, and the attending physician explicitly documented operational time pressure due to high ED volume.
+
+CRITICAL RISK FLAGGING:
+
+1. Major Clinical Diagnostic Gap (Missed Standard of Care):
+   Discharging an acute chest pain patient without checking cardiac biomarkers (Troponin) represents a severe deviation from established clinical pathways. An "unremarkable EKG" does not rule out a Non-ST-Elevation Myocardial Infarction (NSTEMI) or unstable angina. Failing to track serial troponins leaves an active myocardial infraction completely un-excluded.
+
+2. Severe Documentation Liability (Malpractice Exposure):
+   The attending's written inclusion of "time pressure due to ED volume" is an immense liability. In medical-legal contexts, this explicitly concedes that operational metrics and administrative constraints compromised clinical diagnostic rigor, effectively handing a plaintiff's attorney a written confession of rushed care.
+
+3. Lack of Alternative Diagnostic Justification:
+   The note fails to outline an alternative diagnostic rationale (e.g., signs of musculoskeletal reproducible pain or gastrointestinal sources) to justify treating a chest pain presentation with simple NSAIDs (ibuprofen) without lab work.
+
+4. Institutional Risk Mitigation:
+   This chart must be immediately flagged for an internal Quality Assurance (QA) peer review. Case management should consider an immediate outreach protocol to ensure the patient is safe and instruct them to seek definitive re-evaluation if diagnostic clarity was missed.
+
+
+========================================================================
+PRODUCTION DESIGN BENCHMARKS (SUMMARY)
+========================================================================
+* Task 1 Routing: Escalate to Opus/GPT-4o due to strategic ambiguity and implicit risks.
+* Task 2 Routing: Keep on gpt-4o-mini/Haiku to minimize token spend.
+* Task 3 Routing: Escalate immediately to Opus/GPT-4o due to critical medical-legal liability.
+* Optimizations applied: Prompt caching on company policies; max_tokens cap on Task 2.
+========================================================================
