@@ -1,0 +1,28 @@
+User Query
+    │
+    ▼
+┌─────────────┐
+│   Planner   │
+└──────┬──────┘
+       │
+       ▼
+ Creates steps/tasks
+       │
+       ▼
+┌─────────────┐
+│  Executor   │
+└──────┬──────┘
+       │
+       ▼
+ Executes each step
+       │
+       ▼
+┌─────────────┐
+│ Validator   │
+└──────┬──────┘
+       │
+       ▼
+Pass / Fail
+       │
+       ▼
+Final Response

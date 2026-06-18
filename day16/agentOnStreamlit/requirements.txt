@@ -1,0 +1,11 @@
+streamlit
+langchain
+langchain-openai
+python-dotenv
+
+
+# Main task for Day 16
+
+# Deploy this planner->executor ->
+
+# validator architecture on streamlit and create a nice UI\

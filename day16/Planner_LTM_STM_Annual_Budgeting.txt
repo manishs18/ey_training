@@ -1,0 +1,69 @@
+Planner Architecture: Distinguishing LTM and STM for Annual Budgeting
+
+Definitions
+
+LTM (Long-Term Memory) - Stable information that persists across
+budgeting cycles. - Strategic objectives, historical spending, policies,
+constraints, and institutional knowledge. - Updated infrequently.
+
+STM (Short-Term Memory) - Working memory used during the current
+budgeting exercise. - Current-year assumptions, calculations,
+negotiations, drafts, and intermediate decisions. - Exists only for the
+duration of the planning session.
+
+1.  Commute / Transportation
+
+LTM - Previous 10 years of transportation budgets - National mobility
+strategy - Existing highway, rail, and metro commitments - Historical
+traffic growth trends - Fuel consumption patterns - Cost benchmarks for
+road construction - Multi-year infrastructure projects
+
+STM - Current year’s traffic projections - New metro proposal under
+evaluation - Inflation assumptions - Current contractor bids - Budget
+gap calculations - Draft allocation scenarios
+
+2.  Defence
+
+LTM - National security doctrine - Multi-year procurement programs -
+Fleet modernization roadmap - Historical readiness metrics - Existing
+contracts - Strategic threat models
+
+STM - Current geopolitical developments - Procurement requests for this
+cycle - Current exchange rates - Budget trade-off analysis - Readiness
+calculations
+
+3.  Agriculture
+
+LTM - Historical crop yield databases - Irrigation coverage statistics -
+Farmer subsidy policies - Long-term food security goals - Climate
+patterns - Previous program effectiveness
+
+STM - Current monsoon forecast - Expected crop demand - Regional drought
+alerts - This year’s subsidy proposals - Cost-benefit analysis
+
+4.  Government / Public Administration
+
+LTM - Constitutional spending obligations - Pension liabilities - Tax
+collection history - Fiscal responsibility rules - Multi-year economic
+plans - Department spending baselines
+
+STM - Current GDP forecast - Revenue estimates - Deficit calculations -
+Cabinet recommendations - Draft budget versions
+
+Planner Architecture View
+
+Planner ├── LTM │ ├── Historical Policies │ ├── Strategies │ └──
+Constraints └── STM ├── Current Year Assumptions ├── Simulations └──
+Draft Plans
+
+Rule of Thumb
+
+LTM answers: “What do we already know and what commitments must be
+honored?”
+
+STM answers: “What is happening this year and what allocation options
+are we currently evaluating?”
+
+A planner retrieves strategic context from LTM, loads relevant facts
+into STM, performs reasoning and optimization in STM, then optionally
+writes finalized decisions back to LTM for future budget cycles.
