@@ -1,0 +1,30 @@
+
+
+
+---
+
+## 📊 3. System Workflow Diagram
+
+This text diagram visually outlines how data flows across the system components from left to right:
+
+```text
++-----------------------+              +-----------------------------+
+|                       |  (1) Video   |                             |
+|  User Command Line    | ------------>|  youtube_emotion_analyzer   |
+|                       |   URL Input  |  (Local Python Script)      |
++-----------------------+              +-----------------------------+
+                                                      |
+                                                      | (2) Downloads via yt-dlp
+                                                      v
+                                       +-----------------------------+
+                                       |      ./emotion_analysis/    |
+                                       |      Local .mp4 Storage     |
+                                       +-----------------------------+
+                                                      |
+                                                      | (3) Dispatches media
+                                                      v
++-----------------------+              +-----------------------------+
+|                       | (5) Results  |                             |
+|  Console Output /     |<------------ |  Hume.ai Remote Servers     |
+|  Local JSON File      |   Data Push  |  (Processes AI Models)      |
++-----------------------+              +-----------------------------+
