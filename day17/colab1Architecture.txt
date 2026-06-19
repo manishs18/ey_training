@@ -1,0 +1,9 @@
+                  Manager LLM
+                        |
+    ------------------------------------------------
+    |          |           |          |            |
+ Monitor    Router      Comms    Compliance    Reporter
+    |          |           |          |            |
+    ------------------------------------------------
+                        |
+                  Final Report
