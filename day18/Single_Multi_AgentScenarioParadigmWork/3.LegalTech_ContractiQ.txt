@@ -1,0 +1,72 @@
+3. LegalTech – ContractiQ
+Choice: Hybrid Multi-Agent Architecture
+Justification
+
+The workflow naturally splits into two phases.
+
+Phase 1 (Parallel)
+
+Each of the 800 contracts can be analyzed independently:
+
+Clause extraction
+Obligation detection
+Risk identification
+
+This is embarrassingly parallel.
+
+Phase 2 (Global Synthesis)
+
+Results must then be combined to:
+
+Find cross-contract dependencies
+Detect cascading change-of-control clauses
+Produce executive risk summary
+Generate Red/Amber/Green heatmap
+
+This requires a coordinating synthesis agent.
+
+
+
+
+
+
+
+Block Diagram
+
+
+
+          800 Contracts
+                 │
+                 ▼
+     +---------------------------+
+     | Parallel Extraction       |
+     | Agents (1 per contract)   |
+     +---------------------------+
+                 │
+      Extracted Structured Data
+                 │
+                 ▼
+     +---------------------------+
+     | Regulatory Check Agent    |
+     +---------------------------+
+                 │
+                 ▼
+     +---------------------------+
+     | Cross-Contract            |
+     | Dependency Agent          |
+     +---------------------------+
+                 │
+                 ▼
+     +---------------------------+
+     | Executive Summary Agent   |
+     | Heatmap Generator         |
+     +---------------------------+
+
+
+
+
+Why Multi-Agent?
+800 independent documents
+Massive parallelization opportunity
+Cross-document synthesis requires specialization
+4-hour SLA benefits from distributed execution

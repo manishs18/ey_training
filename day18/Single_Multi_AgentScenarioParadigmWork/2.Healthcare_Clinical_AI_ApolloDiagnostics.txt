@@ -1,0 +1,80 @@
+2. Healthcare / Clinical AI – Apollo Diagnostics
+Choice: Multi-Agent
+Justification
+
+Each stage belongs to a completely different medical domain and requires specialized tools.
+
+Step	Domain	Tool
+CT Interpretation	Radiology AI	Imaging model
+Contraindication Check	Clinical Decision Support	Medication database
+Follow-up Scheduling	Hospital Operations	EMR APIs
+Patient Communication	Medical NLP	Letter generator
+
+Each stage has:
+
+Different permissions
+Different knowledge base
+Different failure modes
+Validation gates before proceeding
+
+Failure isolation is critical because an incorrect diagnosis should prevent downstream scheduling or communication.
+
+A Multi-Agent architecture provides:
+
+Modularity
+Human approval checkpoints
+Better auditability
+Independent upgrades
+
+
+
+
+
+
+Block Diagram
+
+
+
+
+
+          Chest CT Scan
+                  │
+                  ▼
+      +------------------------+
+      | Radiology Agent        |
+      | Detect Findings        |
+      +------------------------+
+                  │
+          Human/Quality Gate
+                  │
+                  ▼
+      +------------------------+
+      | Clinical Decision      |
+      | Support Agent          |
+      | Drug Contraindications |
+      +------------------------+
+                  │
+                  ▼
+      +------------------------+
+      | Scheduling Agent       |
+      | EMR Integration        |
+      +------------------------+
+                  │
+                  ▼
+      +------------------------+
+      | Communication Agent    |
+      | GP Letter + Patient    |
+      | Summary                |
+      +------------------------+
+                  │
+                  ▼
+              Final Output
+
+
+
+
+Why not Single Agent?
+Multiple specialized domains
+Different tool access/security scopes
+Sequential approval gates
+Medical safety requires failure isolation

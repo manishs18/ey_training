@@ -1,0 +1,71 @@
+4. DevOps / Platform Engineering – CloudOps Sentinel
+Choice: Multi-Agent
+Justification
+
+The first three investigations are completely independent.
+
+They query different systems:
+
+Investigation	Tool
+Metrics	Datadog
+Deployment Logs	GitHub Actions
+DB Performance	AWS RDS
+
+These can execute simultaneously, reducing incident response time.
+
+Afterward:
+
+A Decision Agent aggregates evidence.
+If confidence <80%, a Human Approval Gate is triggered.
+If approved, a Remediation Agent executes rollback/restart.
+Finally, a Communication Agent posts the RCA to Slack.
+
+
+
+
+
+
+Block Diagram
+
+
+
+                 Alert
+                   │
+                   ▼
+        +---------------------+
+        | Orchestrator Agent  |
+        +---------------------+
+                   │
+      ┌────────────┼────────────┐
+      │            │            │
+      ▼            ▼            ▼
+Metrics Agent  Logs Agent   DB Agent
+(Datadog)      (GitHub)     (AWS RDS)
+      │            │            │
+      └────────────┼────────────┘
+                   ▼
+        +----------------------+
+        | Decision Agent       |
+        +----------------------+
+                   │
+          Confidence >80%?
+          /               \
+        Yes               No
+         │                 │
+         ▼                 ▼
+Remediation Agent   Human Approval
+         │                 │
+         └──────────┬──────┘
+                    ▼
+        +----------------------+
+        | Communication Agent  |
+        | Slack RCA            |
+        +----------------------+
+
+
+
+Why not Single Agent?
+Independent investigations can run concurrently
+Different tool surfaces (Datadog, GitHub, AWS, kubectl, Slack)
+Human-in-the-loop approval gate
+Failure isolation and auditability are essential

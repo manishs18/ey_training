@@ -1,0 +1,55 @@
+1. E-Commerce / Retail – ShopIQ
+Personalized Product Recommendation Email
+Choice: Single Agent
+Justification
+
+This workflow operates on a single shared user context:
+
+Purchase history
+Browsing history
+Recommendation model output
+Business rules
+Email generation
+
+Every step depends on the same context object and executes in a strict sequential order.
+
+Introducing multiple agents would require:
+
+Context serialization/deserialization
+Inter-agent communication
+Additional orchestration overhead
+
+With 4 million users processed nightly and an SLA of <3 seconds per user, minimizing latency is more important than specialization.
+
+Therefore, a single orchestrating agent with multiple internal tools is the optimal architecture.
+
+
+
+
+
+
+
+
+Block Diagram
+
+
+
+
+                  User Context
+                        │
+                        ▼
+             +----------------------+
+             |    Single Agent      |
+             +----------------------+
+                        │
+      ┌─────────────────┼─────────────────┐
+      │                 │                 │
+      ▼                 ▼                 ▼
+Recommendation     Business Rules    Copy Generator
+      │                 │                 │
+      └──────────────┬────────────────────┘
+                     ▼
+              HTML Email Builder
+                     │
+                     ▼
+                Email Delivery
