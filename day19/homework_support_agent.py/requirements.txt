@@ -1,0 +1,8 @@
+langgraph>=0.0.30
+langchain>=0.1.0
+langchain-openai>=0.1.0
+langchain-community>=0.1.0
+redis>=5.0.0
+chromadb>=0.4.24
+celery>=5.3.6
+tenacity>=8.2.3
