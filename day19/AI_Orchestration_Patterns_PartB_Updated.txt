@@ -1,0 +1,134 @@
+AI ORCHESTRATION PATTERN SELECTION – PART B
+
+================================================== 1. INSURANCE – Claims
+Adjudication ==================================================
+
+Selected Pattern: GraphFlow
+
+Why? • Fraud screening, policy coverage check, and medical coding review
+are independent. • All three run in parallel. • Final decision depends
+on all three outputs. • GraphFlow is designed for parallel execution
+with dependency management.
+
+Runner-up: Magentic Why Runner-up? • Supports multiple agents but is
+more flexible than required.
+
+Why NOT other patterns? • Round-robin: Executes agents one after
+another, not parallel. • Selector: Chooses only one agent instead of
+combining multiple results. • Swarm/Handoff: Focuses on transferring
+work between agents rather than parallel execution. • Magentic: Can work
+but is less structured than GraphFlow for DAG workflows.
+
+Block Diagram
+
+                  +----------------+
+                  | Claim Request  |
+                  +-------+--------+
+                          |
+        ---------------------------------------
+        |                 |                   |
+        v                 v                   v
+
++—————+ +—————-+ +——————+ | Fraud Check | | Coverage Check | | Medical
+Coding | +——-+——-+ +——–+——-+ +——–+———+   | /   | /   | / ——————————– | v
++———————-+ | Final Decision Agent | +———-+———–+ | v Approve / Deny
+
+================================================== 2. RETAIL – Buyer’s
+Research Assistant ==================================================
+
+Selected Pattern: Magentic
+
+Why? • Number of tasks is unknown beforehand. • Agent dynamically plans
+research. • Can invoke web search, supplier lookup and trend analysis. •
+Produces a consolidated report.
+
+Runner-up: Swarm/Handoff Why Runner-up? • Multiple agents collaborate
+but planning is less autonomous.
+
+Why NOT other patterns? • Round-robin: Fixed sequence is inefficient for
+dynamic research. • Selector: Picks one agent instead of coordinating
+many tasks. • GraphFlow: Requires predefined workflow while research is
+unpredictable. • Swarm/Handoff: Good collaboration but lacks Magentic’s
+planning capability.
+
+Block Diagram
+
+              +-----------------------+
+              | User Research Request |
+              +-----------+-----------+
+                          |
+                          v
+                +------------------+
+                | Magentic Planner |
+                +---------+--------+
+                          |
+          ------------------------------------
+          |                |                 |
+          v                v                 v
+
+Web Search Supplier Lookup Trend Analysis | | | ——————————- | v
++———————-+ | Summary Generator | +———-+———–+ | v Final Research Report
+
+================================================== 3. MANUFACTURING –
+RFP Response Builder ==================================================
+
+Selected Pattern: GraphFlow
+
+Why? • Workflow follows a defined sequence. • Reviewer may send sections
+back for rework. • Supports conditional branches and feedback loops.
+
+Runner-up: Selector Why Runner-up? • Can assign specialists but cannot
+naturally model review loops.
+
+Why NOT other patterns? • Round-robin: Cannot efficiently handle
+conditional rework. • Swarm/Handoff: Better for ownership transfer than
+structured workflows. • Magentic: Too dynamic for a predictable business
+process. • Selector: Only selects specialists and lacks complete
+workflow orchestration.
+
+Block Diagram
+
+             +----------------+
+             | RFP Request    |
+             +-------+--------+
+                     |
+                     v
+          +----------------------+
+          | Technical Section    |
+          +----------+-----------+
+                     |
+                     v
+          +----------------------+
+          | Pricing Section      |
+          +----------+-----------+
+                     |
+                     v
+          +----------------------+
+          | Compliance Section   |
+          +----------+-----------+
+                     |
+                     v
+          +----------------------+
+          | Timeline Section     |
+          +----------+-----------+
+                     |
+                     v
+          +----------------------+
+          | Assemble Draft       |
+          +----------+-----------+
+                     |
+                     v
+          +----------------------+
+          | Reviewer             |
+          +-----+-----------+----+
+                |           |
+          Needs Rework?     |
+                |           |
+                v           v
+      Return Specific     Final
+         Section          Approval
+
+Suggested GitHub Structure
+
+orchestration-patterns/ ├── README.md ├── insurance-claims/ ├──
+retail-research/ ├── manufacturing-rfp/ └── images/
