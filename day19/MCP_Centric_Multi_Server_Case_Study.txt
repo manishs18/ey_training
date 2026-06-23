@@ -1,0 +1,321 @@
+MCP-Centric Multi-Server Case Study
+
+Overview
+
+The architecture separates responsibilities based on ownership and trust
+boundaries:
+
+-   Seller-controlled MCP Server: Handles SP-API data, inventory,
+    orders, catalog, and internal cost database.
+-   Amazon Official MCP Server: Handles Amazon Ads APIs where budgets
+    and campaigns directly impact money.
+-   LLM Agent: Can autonomously perform read operations but requires
+    user approval before any action that changes money, campaigns, or
+    accesses sensitive PII.
+
+1. Design Decisions by Domain
+
+Domain: Discovery Decision: Dynamic MCP Server Discovery Reasoning:
+Agent discovers available MCP servers and their capabilities instead of
+hardcoding APIs.
+
+Domain: Authorization Decision: OAuth per MCP Server Reasoning: Each
+server maintains independent authentication and token lifecycle.
+
+Domain: Identity Decision: Seller identity propagated through MCP
+Reasoning: Every request carries seller context for auditability.
+
+Domain: Routing Decision: Intent-based routing Reasoning: Agent selects
+Seller MCP or Amazon Ads MCP depending on requested task.
+
+Domain: Data Ownership Decision: Split by trust boundary Reasoning:
+Internal cost data never leaves seller-controlled server.
+
+Domain: Tool Selection Decision: Capability-based Reasoning: Agent
+chooses tools based on advertised MCP capabilities.
+
+Domain: Autonomy Decision: Read-only autonomous execution Reasoning:
+Safe operations execute automatically.
+
+Domain: Human Approval Decision: Mandatory for write operations
+Reasoning: Campaign creation, budget updates, bid changes require
+confirmation.
+
+Domain: Security Decision: Principle of least privilege Reasoning: Each
+MCP exposes only required APIs.
+
+Domain: Caching Decision: Cache read-heavy SP-API data Reasoning: Reduce
+latency and API quota usage.
+
+Domain: PII Handling Decision: Restricted access Reasoning: Customer
+addresses/orders require explicit approval or masking.
+
+Domain: Audit Logging Decision: Every tool invocation logged Reasoning:
+Compliance and debugging.
+
+Domain: Error Handling Decision: Server isolation Reasoning: Failure of
+Ads MCP should not affect Seller MCP operations.
+
+Domain: Extensibility Decision: Multiple MCP servers Reasoning: Future
+ERP, CRM, Shipping servers can be added without agent redesign.
+
+2. Thinking Process
+
+                    User Request
+                          |
+                          v
+                 Intent Classification
+                          |
+          +---------------+---------------+
+          |                               |
+      Read Intent                    Write Intent
+          |                               |
+          v                               v
+
+Autonomous Execution Human Approval Required | | +—————+—————+ | v MCP
+Tool Selection | +——————-+——————+ | | Seller-Controlled MCP Amazon Ads
+MCP (SP-API + Cost DB) (Official Ads APIs)
+
+3. Rough Block Diagram
+
+                         +----------------------+
+                         |       User           |
+                         +----------+-----------+
+                                    |
+                         Natural Language Query
+                                    |
+                                    v
+                      +-----------------------------+
+                      |      LLM Agent / Planner    |
+                      +-----------------------------+
+                                    |
+                  Intent + Tool Discovery + Routing
+                                    |
+        -------------------------------------------------
+        |                                               |
+        |                                               |
+        v                                               v
+
++—————————+ +—————————+ | Seller-Controlled MCP | | Amazon Official MCP
+| | | | | | - SP-API | | - Ads Campaigns | | - Inventory | | - Budget
+APIs | | - Orders | | - Bid APIs | | - Catalog | | | | - Internal Cost
+DB | +————-+————-+ +————-+————-+ | | | v v Seller Internal Systems
+Amazon Advertising APIs
+
+4. Read vs Write Policy
+
+=============================================================
+                 READ vs WRITE POLICY
+=============================================================
+
++--------------------------------------+----------------------+---------------------------+
+| Operation                            | Autonomous Execution | Human Approval Required   |
++--------------------------------------+----------------------+---------------------------+
+| Get Inventory                        | Yes                  | No                        |
+| Get Sales Report                     | Yes                  | No                        |
+| Calculate Profit (using Cost DB)     | Yes                  | No                        |
+| List Advertising Campaigns           | Yes                  | No                        |
+| Show Campaign Performance            | Yes                  | No                        |
+| Increase Daily Budget                | No                   | Yes                       |
+| Create New Campaign                  | No                   | Yes                       |
+| Change Bid Strategy                  | No                   | Yes                       |
+| Download Customer PII                | No                   | Yes                       |
++--------------------------------------+----------------------+---------------------------+
+
+Rule Summary:
+-------------
+1. Read-only operations (Inventory, Sales Reports, Campaign Performance,
+   Profit Calculation) are executed autonomously by the LLM Agent.
+
+2. Write operations or sensitive actions (Budget Updates, Campaign Creation,
+   Bid Strategy Changes, Customer PII Access) require explicit human approval
+   before execution.
+
+5. Architecture Summary
+
+The architecture follows an MCP-centric multi-server design where: -
+Seller-owned MCP exposes SP-API data and proprietary cost information
+while keeping sensitive business logic within the seller’s trust
+boundary. - Amazon Official Ads MCP owns all advertising operations and
+remains the only interface for campaign modifications. - The LLM agent
+acts as an intelligent orchestrator, discovering capabilities, routing
+requests to the appropriate MCP server, autonomously executing safe read
+operations, and enforcing human approval for any money-impacting or
+PII-sensitive actions.
+
+This design provides strong security isolation, extensibility,
+auditability, and aligns with the principle of least privilege while
+enabling autonomous AI workflows.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+MCP-Centric Multi-Server Case Study with Examples
+
+1. Introduction
+
+Imagine you are an Amazon Seller using an AI Assistant.
+
+The AI uses different MCP (Model Context Protocol) servers for different
+tasks.
+
+Seller MCP Server: - Inventory - Orders - Catalog - Internal Cost
+Database
+
+Amazon Ads MCP Server: - Campaign APIs - Budget APIs - Bid APIs
+
+The AI can perform read operations automatically but asks for human
+approval before changing money, campaigns, or accessing customer PII.
+
+  -------------------------------
+  2. Example 1: Check Inventory
+  -------------------------------
+
+User: “How many iPhone Covers are in stock?”
+
+Flow:
+
+User | v LLM Agent | v Seller MCP | v Inventory API | v Stock = 120
+
+Result: “There are 120 iPhone Covers available.”
+
+This is a Read operation, so no approval is required.
+
+  --------------------------------
+  3. Example 2: Calculate Profit
+  --------------------------------
+
+User: “Show today’s profit.”
+
+Data: Selling Price = $500 Cost Price = $350 Orders = 100
+
+Profit = (500 - 350) x 100 Profit = $15,000
+
+The AI calculates and returns the result automatically.
+
+  ------------------------------------
+  4. Example 3: Campaign Performance
+  ------------------------------------
+
+User: “Show my advertising performance.”
+
+Amazon Ads MCP returns:
+
+Clicks : 250 Spend : $1200 Sales : $7000 ROAS : 5.8
+
+Since this is a Read operation, no approval is needed.
+
+  -----------------------------
+  5. Example 4: Budget Update
+  -----------------------------
+
+User: “Increase my campaign budget from $1000 to $3000.”
+
+AI Response:
+
+Approval Required
+
+Current Budget : $1000 New Budget : $3000
+
+Continue? Yes / No
+
+Only after approval will the budget be updated.
+
+  ----------------------------
+  6. Example 5: Customer PII
+  ----------------------------
+
+User: “Download customer address.”
+
+AI Response:
+
+Sensitive Information Requested
+
+Customer Address Access
+
+Do you approve? Yes / No
+
+Customer PII is never accessed without approval.
+
+  ---------------------
+  7. Design Decisions
+  ---------------------
+
+Discovery - MCP servers advertise available tools.
+
+Authorization - Each MCP server has its own OAuth authentication.
+
+Identity - Seller identity is included in every request.
+
+Routing - AI selects the correct MCP server.
+
+Data Ownership - Cost data stays inside the Seller MCP.
+
+Tool Selection - AI selects tools based on capabilities.
+
+Autonomy - Read operations execute automatically.
+
+Human Approval - Budget and campaign changes require approval.
+
+Security - Least privilege access.
+
+Caching - Frequently used read data is cached.
+
+PII Handling - Customer information is protected.
+
+Audit Logging - Every action is recorded.
+
+Error Handling - Failure of one server does not affect another.
+
+Extensibility - New MCP servers like ERP or CRM can be added easily.
+
+  -----------------
+  8. Architecture
+  -----------------
+
+                 User
+                   |
+                   v
+            LLM AI Assistant
+                   |
+        Intent + Tool Selection
+                   |
+         -------------------------
+         |                       |
+         v                       v
+    Seller MCP          Amazon Ads MCP
+         |                       |
+
+Inventory, Orders Campaign APIs Catalog, Cost DB Budget APIs
+
+  -------------------------
+  9. Read vs Write Policy
+  -------------------------
+
+Operation Auto Approval
+
+Get Inventory Yes No Get Sales Report Yes No Calculate Profit Yes No
+List Advertising Campaigns Yes No Show Campaign Performance Yes No
+Increase Daily Budget No Yes Create New Campaign No Yes Change Bid
+Strategy No Yes Download Customer PII No Yes
+
+  -----------------------
+  10. Interview Summary
+  -----------------------
+
+The architecture uses two MCP servers. The Seller MCP manages inventory,
+orders, catalog, and cost data, while the Amazon Ads MCP handles
+advertising operations. The LLM Agent automatically performs safe read
+operations but requires human approval for budget changes, campaign
+creation, bid updates, and customer PII access. This design provides
+security, scalability, auditability, and clear trust boundaries.

@@ -1,0 +1,129 @@
+Homework: Pros and Cons of Pull/Push Notification Architecture with Practical Working Demo
+1. Pull Notification Architecture
+Definition
+
+In a Pull architecture, the client (mobile app, web app, or desktop application) periodically requests (polls) the server to check whether new data or notifications are available.
+
+Flow:
+
+Client ---> Request for updates ---> Server
+Client <--- Response (New data/No data) <--- Server
+Advantages
+Simple to implement.
+The client controls when data is fetched.
+No persistent connection is required.
+Works well for applications where real-time updates are not critical.
+Disadvantages
+Wastes bandwidth by sending repeated requests even when there is no new data.
+Higher latency because updates are only received during polling intervals.
+Increases server load when many clients poll frequently.
+Not suitable for instant notifications.
+Practical Demo (Python)
+Server (Flask)
+from flask import Flask, jsonify
+
+app = Flask(__name__)
+
+notification = {
+    "message": "No new notification"
+}
+
+@app.route('/notification')
+def get_notification():
+    return jsonify(notification)
+
+@app.route('/update')
+def update_notification():
+    notification["message"] = "Assignment Submitted Successfully!"
+    return "Notification Updated"
+
+if __name__ == '__main__':
+    app.run(debug=True)
+Client (Polling every 5 seconds)
+import requests
+import time
+
+while True:
+    response = requests.get("http://127.0.0.1:5000/notification")
+    print(response.json()["message"])
+    time.sleep(5)
+Working
+Start the Flask server.
+Run the client script.
+Initially, it prints:
+No new notification
+No new notification
+Visit:
+http://127.0.0.1:5000/update
+The client will display after the next polling interval:
+Assignment Submitted Successfully!
+2. Push Notification Architecture
+Definition
+
+In a Push architecture, the server immediately sends notifications to connected clients whenever new data becomes available.
+
+Flow:
+
+Server ---> Push Notification ---> Client
+
+No repeated requests from the client are needed.
+
+Advantages
+Real-time communication.
+Lower network traffic because there is no constant polling.
+Better user experience with instant updates.
+More efficient for chat applications, messaging, and alerts.
+Disadvantages
+More complex implementation.
+Requires persistent connections (WebSocket, MQTT, Firebase Cloud Messaging, etc.).
+Server must maintain active client connections.
+May consume resources for long-lived connections.
+Practical Demo (Python using WebSocket)
+Server
+import asyncio
+import websockets
+
+async def notify(websocket):
+    while True:
+        message = input("Enter notification: ")
+        await websocket.send(message)
+
+async def main():
+    async with websockets.serve(notify, "localhost", 8765):
+        await asyncio.Future()
+
+asyncio.run(main())
+Client
+import asyncio
+import websockets
+
+async def receive():
+    async with websockets.connect("ws://localhost:8765") as websocket:
+        while True:
+            message = await websocket.recv()
+            print("Notification:", message)
+
+asyncio.run(receive())
+Working
+Start the WebSocket server.
+Start the client.
+On the server terminal, type:
+Meeting starts in 10 minutes!
+The client immediately displays:
+Notification: Meeting starts in 10 minutes!
+
+No polling or repeated requests are made.
+
+Comparison Table
+Feature	Pull Architecture	Push Architecture
+Communication	Client requests data	Server sends data automatically
+Latency	Depends on polling interval	Very low (real-time)
+Bandwidth Usage	Higher due to repeated requests	Lower because data is sent only when needed
+Implementation	Simple	More complex
+Server Load	High with frequent polling	Efficient but requires persistent connections
+Best Use Cases	Email refresh, news updates, periodic status checks	Chat apps, stock market updates, live sports scores, instant messaging
+Conclusion
+Pull architecture is best when real-time updates are not essential and simplicity is preferred. Examples include checking email or refreshing a news feed.
+Push architecture is ideal for applications that require instant communication, such as WhatsApp, Slack, online gaming, live notifications, and IoT systems.
+
+In modern applications, push notifications are generally preferred for better responsiveness, while pull mechanisms remain useful for scheduled synchronization and less time-sensitive tasks.
