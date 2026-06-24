@@ -1,0 +1,21 @@
+multi-agent-observability/
+│
+├── main.py                 # Start project
+├── orchestrator.py         # Controls all agents
+├── telemetry.py            # Creates telemetry events
+├── observer.py             # Prints events
+├── event_store.py          # Stores all events
+├── models.py               # Event model
+├── utils.py                # Helper functions
+├── config.py               # Configuration
+│
+├── agents/
+│   ├── __init__.py
+│   ├── planner.py
+│   ├── researcher.py
+│   ├── writer.py
+│   └── reviewer.py
+│
+└── output/
+    ├── telemetry.jsonl
+    └── summary.txt

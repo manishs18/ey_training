@@ -1,0 +1,31 @@
+main.py
+    │
+    ▼
+Create Orchestrator
+    │
+    ▼
+Generate Run ID
+    │
+    ▼
+Planner Agent
+    │
+    ▼
+Researcher Agent
+    │
+    ▼
+Writer Agent
+    │
+    ▼
+Reviewer Agent
+    │
+    ▼
+Observer prints events
+    │
+    ▼
+Telemetry writes JSON logs
+    │
+    ▼
+Event Store saves events
+    │
+    ▼
+Print Summary

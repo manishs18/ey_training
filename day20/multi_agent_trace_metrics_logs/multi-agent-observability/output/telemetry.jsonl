@@ -1,0 +1,8 @@
+{"run_id": "c20f2384-a1dc-4782-bc5a-8a742fa85332", "agent": "Planner", "event": "START", "timestamp": "2026-06-24T10:03:08", "message": "Planning started"}
+{"run_id": "c20f2384-a1dc-4782-bc5a-8a742fa85332", "agent": "Planner", "event": "SUCCESS", "timestamp": "2026-06-24T10:03:09", "message": "Planning completed"}
+{"run_id": "c20f2384-a1dc-4782-bc5a-8a742fa85332", "agent": "Researcher", "event": "START", "timestamp": "2026-06-24T10:03:09", "message": "Research started"}
+{"run_id": "c20f2384-a1dc-4782-bc5a-8a742fa85332", "agent": "Researcher", "event": "SUCCESS", "timestamp": "2026-06-24T10:03:10", "message": "Research completed"}
+{"run_id": "c20f2384-a1dc-4782-bc5a-8a742fa85332", "agent": "Writer", "event": "START", "timestamp": "2026-06-24T10:03:10", "message": "Writing started"}
+{"run_id": "c20f2384-a1dc-4782-bc5a-8a742fa85332", "agent": "Writer", "event": "SUCCESS", "timestamp": "2026-06-24T10:03:11", "message": "Writing completed"}
+{"run_id": "c20f2384-a1dc-4782-bc5a-8a742fa85332", "agent": "Reviewer", "event": "START", "timestamp": "2026-06-24T10:03:11", "message": "Review started"}
+{"run_id": "c20f2384-a1dc-4782-bc5a-8a742fa85332", "agent": "Reviewer", "event": "SUCCESS", "timestamp": "2026-06-24T10:03:12", "message": "Review completed"}
