@@ -1,0 +1,61 @@
+================================================================================
+OBSERVABILITY & GOVERNANCE: THE ULTIMATE TRACE VS. AUDIT LOG CHEAT SHEET
+================================================================================
+
+This document provides a comprehensive guide to understanding the differences between 
+Distributed Traces/Spans and Audit Logs, along with step-by-step solutions to the 
+MeridianPay platform routing assignment.
+
+--------------------------------------------------------------------------------
+1. CORE CONCEPT COMPARISON
+--------------------------------------------------------------------------------
+
+AXIS               | TRACE / SPANS 📊                        | AUDIT LOG 📜
+-------------------|----------------------------------------|----------------------------------------
+Core Question      | How did it run? Where's the time?       | Who did what? Prove it.
+Completeness       | Sampled — keeps ~10% (transient)        | Every record — never sampled (100%)
+Mutability         | Expires, can be dropped                 | Append-only, tamper-evident
+Lifetime           | Hours -> weeks                          | Months -> years (WORM: Write Once, Read Many)
+Audience           | SRE, Developers, FinOps                 | Compliance, Legal, Security
+Built from         | OpenTelemetry spans                    | Signed / hash-chained sink
+
+KEY RULE OF THUMB:
+- Choose TRACE if the task asks WHERE, WHY, HOW FAST, or HOW MUCH.
+- Choose AUDIT LOG if the task asks WHO, PROVE, KEEP, or ALL OF THEM.
+- Choose BOTH if you need structural timing flow across 100% of un-sampled records.
+
+--------------------------------------------------------------------------------
+2. ASSIGNMENT TICKETS & GUIDED SOLUTIONS
+--------------------------------------------------------------------------------
+
+TICKET 01: SRE On-Call
+Prompt: "p99 latency on the underwriting agent jumped to 4.2s overnight. Find which sub-step ate the time."
+👉 CORRECT ANSWER: Trace / Spans
+💡 Why: It deals directly with performance metrics ("latency", "4.2s") and requires breaking down internal execution into individual blocks ("which sub-step ate the time") to find timing bottlenecks.
+
+TICKET 02: Regulator
+Prompt: "A regulator demands: who approved loan #88213, on what model version, with what inputs — and proof it was never altered."
+👉 CORRECT ANSWER: Audit log
+💡 Why: Submitted by a Regulator focusing on compliance ("who", "what inputs"). It explicitly demands "proof it was never altered," which is only fulfilled by the permanent, cryptographic, append-only nature of a hash-chained Audit Log.
+
+TICKET 03: Compliance
+Prompt: "Prove the PII-redaction guardrail ran before the model call on all 12,400 approvals last quarter."
+👉 CORRECT ANSWER: Audit log
+💡 Why: 
+1. "On all 12,400 approvals" requires the Audit Log because traces are sampled at 10% (which would drop 90% of the data).
+2. "Ran before the model call" requires a Trace to inspect the structural, parent-child timing flow hierarchy to prove execution order.
+Therefore, you must check the Audit Log to ensure zero missing records, and use the 'trace_id' to jump into the trace to verify sequential alignment.
+
+TICKET 04: SRE On-Call
+Prompt: "You're reproducing a single failing request in staging — show the full call tree and pinpoint where it errored."
+👉 CORRECT ANSWER: Trace / Spans
+💡 Why: It asks for an execution diagram ("full call tree") to inspect internal software boundaries for a "single failing request" in an engineering environment ("staging"). No compliance or historical tracking is needed.
+
+TICKET 05: FinOps
+Prompt: "FinOps wants average cost & tokens per request on a live dashboard. Sampling 10% is fine with them."
+👉 CORRECT ANSWER: Trace / Spans
+💡 Why: FinOps is looking for aggregated trends ("average cost & tokens") to power a "live dashboard." The ticket explicitly validates that "Sampling 10% is fine," matching your platform's 10% trace sampling architecture.
+
+================================================================================
+Generated for Day 20 Toolkit Study Guide (OTel spans + hash-chained AUDIT_LOG)
+================================================================================
