@@ -1,8 +1,8 @@
 # Used to securely store your API key
 from google.colab import userdata
- 
+
 # Retrieve the Groq API key from Colab secrets
-GROQ_API_KEY = "GROQ_API_KEY”
+GROQ_API_KEY = "GROQ_API_KEYï¿½
  
 # Ensure the .env file exists and write the key to it
 with open('.env', 'a') as f:
