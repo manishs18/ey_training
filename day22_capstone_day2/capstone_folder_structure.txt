@@ -1,0 +1,91 @@
+└───NutriGuard-main
+    │   .gitignore
+    │   README.md
+    │   
+    ├───frontend
+    │   │   index.html
+    │   │   package-lock.json
+    │   │   package.json
+    │   │   vite.config.js
+    │   │   
+    │   └───src
+    │       │   api.js
+    │       │   App.jsx
+    │       │   constants.js
+    │       │   main.jsx
+    │       │   styles.css
+    │       │   
+    │       ├───components
+    │       │       Brand.jsx
+    │       │       DashboardHeader.jsx
+    │       │       HealthyBackdrop.jsx
+    │       │       ProfileMenu.jsx
+    │       │       Sidebar.jsx
+    │       │       ThemeToggle.jsx
+    │       │       TopNav.jsx
+    │       │       
+    │       ├───pages
+    │       │       AuthPage.jsx
+    │       │       HistoryPage.jsx
+    │       │       MealPage.jsx
+    │       │       ProfilePage.jsx
+    │       │       ReportPage.jsx
+    │       │       
+    │       ├───styles
+    │       │       auth.css
+    │       │       base.css
+    │       │       dark.css
+    │       │       header-profile.css
+    │       │       meal-form.css
+    │       │       reports-history.css
+    │       │       responsive.css
+    │       │       sidebar.css
+    │       │       
+    │       └───utils
+    │               meal.js
+    │               
+    ├───infra
+    │       docker-compose.yml
+    │       
+    ├───services
+    │   ├───ai-orchestrator
+    │   │   │   Dockerfile
+    │   │   │   requirements.txt
+    │   │   │   
+    │   │   └───app
+    │   │       │   main.py
+    │   │       │   
+    │   │       ├───agents
+    │   │       │       health_risk_agent.py
+    │   │       │       meal_analyzer_agent.py
+    │   │       │       report_agent.py
+    │   │       │       
+    │   │       ├───graph
+    │   │       │       nutriguard_graph.py
+    │   │       │       
+    │   │       ├───llm
+    │   │       │       gemini_client.py
+    │   │       │       
+    │   │       └───rag
+    │   │               mock_retriever.py
+    │   │               
+    │   └───backend-api
+    │       │   Dockerfile
+    │       │   requirements.txt
+    │       │   
+    │       └───app
+    │           │   database.py
+    │           │   main.py
+    │           │   models.py
+    │           │   schemas.py
+    │           │   
+    │           ├───events
+    │           │       outbox_publisher.py
+    │           │       
+    │           └───routes
+    │                   meals.py
+    │                   users.py
+    │                   
+    └───tools
+            build_nutriguard_prd.py
+            
