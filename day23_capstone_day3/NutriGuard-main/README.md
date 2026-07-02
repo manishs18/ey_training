@@ -208,3 +208,84 @@ Inside Docker, services use the internal Postgres host:
 ```text
 postgresql://nutriguard_user:nutriguard_pass@postgres:5432/nutriguard_db
 ```
+
+## Azure deployment with GitHub Actions CI/CD
+
+This repository includes a GitHub Actions workflow that builds the backend, orchestrator, and frontend Docker images, pushes them to Azure Container Registry, and deploys them to Azure App Service.
+
+### 1. Prepare Azure resources
+
+Create a resource group, ACR, PostgreSQL, and three App Services (Linux container):
+
+```bash
+az login
+az group create --name NutriguardRG --location eastus
+az acr create --resource-group NutriguardRG --name nutriguardacr --sku Standard
+az postgres flexible-server create --resource-group NutriguardRG --name nutriguardpg --location eastus --admin-user nutriguard_user --admin-password "YourStrongPass1!" --sku-name Standard_B1ms --tier Burstable --storage-size 32
+az appservice plan create --name NutriguardPlan --resource-group NutriguardRG --is-linux --sku B1
+az webapp create --resource-group NutriguardRG --plan NutriguardPlan --name nutriguard-backend --deployment-container-image-name nginx
+az webapp create --resource-group NutriguardRG --plan NutriguardPlan --name nutriguard-orchestrator --deployment-container-image-name nginx
+az webapp create --resource-group NutriguardRG --plan NutriguardPlan --name nutriguard-frontend --deployment-container-image-name nginx
+```
+
+### 2. Create a GitHub service principal
+
+Generate Azure credentials and save them as the `AZURE_CREDENTIALS` secret in GitHub:
+
+```bash
+az ad sp create-for-rbac --name "nutriguard-github" --role contributor --scopes /subscriptions/YOUR_SUBSCRIPTION_ID/resourceGroups/NutriguardRG --sdk-auth
+```
+
+Copy the JSON output into the GitHub secret `AZURE_CREDENTIALS`.
+
+### 3. Set required GitHub secrets
+
+In GitHub repository Settings > Secrets and variables > Actions add:
+
+- `AZURE_CREDENTIALS` — JSON from `az ad sp create-for-rbac`
+- `AZURE_RESOURCE_GROUP` — `NutriguardRG`
+- `ACR_NAME` — `nutriguardacr`
+- `ACR_LOGIN_SERVER` — `nutriguardacr.azurecr.io`
+- `ACR_USERNAME` — ACR username from Azure
+- `ACR_PASSWORD` — ACR password from Azure
+- `BACKEND_APP_NAME` — `nutriguard-backend`
+- `ORCHESTRATOR_APP_NAME` — `nutriguard-orchestrator`
+- `FRONTEND_APP_NAME` — `nutriguard-frontend`
+
+### 4. Set App Service environment variables
+
+Your backend and orchestrator containers need runtime variables. In the Azure Portal, open each App Service and add:
+
+Backend app settings:
+- `DATABASE_URL` = `postgresql://nutriguard_user:YourStrongPass1!@<postgres-host>:5432/nutriguard_db`
+- `AI_ORCHESTRATOR_URL` = `http://<orchestrator-app-service-name>.azurewebsites.net`
+- `CORS_ORIGINS` = `https://<frontend-app-service-name>.azurewebsites.net`
+- `ENABLE_OUTBOX_PUBLISHER` = `true`
+- `OUTBOX_PUBLISH_INTERVAL_SECONDS` = `5`
+
+AI orchestrator app settings:
+- `DATABASE_URL` = same PostgreSQL URL as backend
+- `GEMINI_API_KEY` = your Gemini API key
+- `GEMINI_MODEL` = `gemini-3-flash-preview`
+
+Frontend app settings are not required for the static Docker image.
+
+### 5. Push to GitHub
+
+Push your code to `main`. The workflow `.github/workflows/azure-cicd.yml` will:
+
+- build Docker images for backend, orchestrator, frontend
+- push them to ACR
+- configure each App Service container image
+- restart each app
+
+### 6. Open the deployed app
+
+After deployment, open the frontend app URL from Azure. Verify backend and orchestrator are healthy by checking Azure logs and the running apps.
+
+### Troubleshooting
+
+- If the workflow fails, open Actions > workflow run for the exact error.
+- If the app is blank, verify App Service settings and that the backend can access PostgreSQL.
+- Use `az webapp log tail --name <app-name> --resource-group NutriguardRG` for runtime logs.
+

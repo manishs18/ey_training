@@ -17,5 +17,6 @@ export const dietOptions = [
 export const navItems = [
   ['meal', 'Log meal'],
   ['report', 'Daily report'],
+  ['query', 'Nutrition query'],
   ['history', 'History'],
 ]

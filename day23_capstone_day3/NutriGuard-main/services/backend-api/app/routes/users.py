@@ -1,12 +1,15 @@
 import hashlib
 import hmac
+import os
+import requests
 import secrets
+from datetime import date
 
 from fastapi import APIRouter, Depends, File, HTTPException, UploadFile
 from sqlalchemy.orm import Session
 from app.database import SessionLocal
-from app.models import User, UserProfile
-from app.schemas import UserCreate, UserLogin, UserProfileCreate
+from app.models import User, UserProfile, MealLog
+from app.schemas import NutritionQueryInput, NutritionQueryResponse, UserCreate, UserLogin, UserProfileCreate
 
 router = APIRouter(prefix="/users", tags=["users"])
 
@@ -181,6 +184,9 @@ def create_profile(user_id: int, payload: UserProfileCreate, db: Session = Depen
         profile.supplements = normalized_supplements
         profile.supplements_text = payload.supplements_text
         profile.health_report_text = payload.health_report_text
+        profile.gender = payload.gender
+        profile.age = payload.age
+        profile.weight_kg = payload.weight_kg
     else:
         profile = UserProfile(
             user_id=user_id,
@@ -194,6 +200,9 @@ def create_profile(user_id: int, payload: UserProfileCreate, db: Session = Depen
             supplements=normalized_supplements,
             supplements_text=payload.supplements_text,
             health_report_text=payload.health_report_text,
+            gender=payload.gender,
+            age=payload.age,
+            weight_kg=payload.weight_kg,
         )
         db.add(profile)
     db.commit()
@@ -208,6 +217,10 @@ def create_profile(user_id: int, payload: UserProfileCreate, db: Session = Depen
         "deficiencies_text": payload.deficiencies_text or "",
         "supplements": normalized_supplements,
         "supplements_text": payload.supplements_text or "",
+        "health_report_text": payload.health_report_text or "",
+        "gender": payload.gender,
+        "age": payload.age,
+        "weight_kg": payload.weight_kg,
         "has_health_report": bool(payload.health_report_text),
     }
 
@@ -230,7 +243,70 @@ def get_profile(user_id: int, db: Session = Depends(get_db)):
         "supplements_text": profile.supplements_text or "",
         "health_report_text": profile.health_report_text or "",
         "health_report_filename": profile.health_report_filename,
+        "gender": profile.gender,
+        "age": profile.age,
+        "weight_kg": profile.weight_kg,
     }
+
+
+@router.post("/{user_id}/nutrition-query", response_model=NutritionQueryResponse)
+def nutrition_query(user_id: int, payload: NutritionQueryInput, db: Session = Depends(get_db)):
+    user = db.query(User).filter(User.id == user_id).first()
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+
+    profile = db.query(UserProfile).filter(UserProfile.user_id == user_id).first()
+    target_date = payload.target_date or date.today()
+    meals = (
+        db.query(MealLog)
+        .filter(MealLog.user_id == user_id)
+        .order_by(MealLog.created_at.asc())
+        .all()
+    )
+    day_meals = [
+        {
+            "meal_log_id": meal.id,
+            "meal_type": meal.meal_type,
+            "meal_text": meal.meal_text,
+            "foods_text": meal.foods_text,
+            "drinks_text": meal.drinks_text,
+            "supplements_text": meal.supplements_text,
+            "notes_text": meal.notes_text,
+            "meal_time": meal.meal_time.isoformat() if meal.meal_time else None,
+            "status": meal.status,
+        }
+        for meal in meals
+        if (meal.meal_time or meal.created_at) and (meal.meal_time or meal.created_at).date() == target_date
+    ]
+
+    ai_service = os.getenv("AI_ORCHESTRATOR_URL")
+    if not ai_service:
+        raise HTTPException(status_code=500, detail="AI orchestrator URL is not configured")
+
+    response = requests.post(
+        f"{ai_service}/nutrition-query",
+        json={
+            "query": payload.query,
+            "goal": profile.goal if profile else None,
+            "goals": profile.goals or [] if profile else [],
+            "diet_type": profile.diet_type if profile else None,
+            "health_conditions": profile.health_conditions or [] if profile else [],
+            "deficiencies": profile.deficiencies or [] if profile else [],
+            "supplements": profile.supplements or [] if profile else [],
+            "age": profile.age if profile else None,
+            "gender": profile.gender if profile else None,
+            "weight_kg": profile.weight_kg if profile else None,
+            "day_meals": day_meals,
+        },
+        timeout=30,
+    )
+    try:
+        response.raise_for_status()
+    except requests.RequestException as exc:
+        raise HTTPException(status_code=502, detail=str(exc)) from exc
+
+    payload_data = response.json()
+    return {"query": payload.query, "response": payload_data.get("response", "No response from AI service.")}
 
 
 @router.post("/{user_id}/profile/report", response_model=dict)

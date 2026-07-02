@@ -16,12 +16,30 @@ export default function ProfilePage(props) {
             ))}
           </div>
         </div>
-        <label>
-          Diet type
-          <select value={props.dietType} onChange={(event) => props.setDietType(event.target.value)}>
-            {dietOptions.map(([value, label]) => <option key={value} value={value}>{label}</option>)}
-          </select>
-        </label>
+        <div className="field-group">
+          <label>
+            Diet type
+            <select value={props.dietType} onChange={(event) => props.setDietType(event.target.value)}>
+              {dietOptions.map(([value, label]) => <option key={value} value={value}>{label}</option>)}
+            </select>
+          </label>
+          <label>
+            Gender
+            <select value={props.gender} onChange={(event) => props.setGender(event.target.value)}>
+              <option value="male">Male</option>
+              <option value="female">Female</option>
+              <option value="other">Other</option>
+            </select>
+          </label>
+          <label>
+            Age
+            <input type="number" value={props.age} onChange={(event) => props.setAge(Number(event.target.value))} min="10" max="120" />
+          </label>
+          <label>
+            Weight (kg)
+            <input type="number" value={props.weightKg} onChange={(event) => props.setWeightKg(Number(event.target.value))} min="30" max="200" step="0.1" />
+          </label>
+        </div>
       </div>
       <label>
         Health conditions

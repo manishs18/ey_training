@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, Text, DateTime, JSON, ForeignKey
+from sqlalchemy import Column, Integer, String, Float, Text, DateTime, JSON, ForeignKey
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
 from app.database import Base
@@ -28,6 +28,9 @@ class UserProfile(Base):
     supplements_text = Column(Text, nullable=True)
     health_report_text = Column(Text, nullable=True)
     health_report_filename = Column(String(255), nullable=True)
+    gender = Column(String(50), nullable=True)
+    age = Column(Integer, nullable=True)
+    weight_kg = Column(Float, nullable=True)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
 
     user = relationship("User")

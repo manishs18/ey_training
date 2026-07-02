@@ -3,10 +3,12 @@ import { apiRequest } from './api'
 import DashboardHeader from './components/DashboardHeader'
 import HealthyBackdrop from './components/HealthyBackdrop'
 import Sidebar from './components/Sidebar'
+import NotificationBanner from './components/NotificationBanner'
 import AuthPage from './pages/AuthPage'
 import HistoryPage from './pages/HistoryPage'
 import MealPage from './pages/MealPage'
 import ProfilePage from './pages/ProfilePage'
+import QueryPage from './pages/QueryPage'
 import ReportPage from './pages/ReportPage'
 import { todayInputDate } from './utils/meal'
 
@@ -31,6 +33,12 @@ function App() {
   const [supplementsText, setSupplementsText] = useState('I take an iron tablet in the morning')
   const [healthReportText, setHealthReportText] = useState('')
   const [parsedProfile, setParsedProfile] = useState(null)
+  const [gender, setGender] = useState('male')
+  const [age, setAge] = useState(25)
+  const [weightKg, setWeightKg] = useState(65)
+  const [queryText, setQueryText] = useState('What protein guidance should I follow today?')
+  const [queryResponse, setQueryResponse] = useState('')
+  const [queryLoading, setQueryLoading] = useState(false)
 
   const [mealText, setMealText] = useState('')
   const [foodsText, setFoodsText] = useState('poha')
@@ -43,6 +51,7 @@ function App() {
   const [selectedDate, setSelectedDate] = useState(todayInputDate())
   const [report, setReport] = useState(null)
   const [reportDetails, setReportDetails] = useState(null)
+  const [notifications, setNotifications] = useState([])
   const [history, setHistory] = useState([])
 
   const resetAuthMessage = () => setMessage('')
@@ -57,6 +66,9 @@ function App() {
       setDeficienciesText(data.deficiencies_text || (data.deficiencies || []).join(', '))
       setSupplementsText(data.supplements_text || (data.supplements || []).join(', '))
       setHealthReportText(data.health_report_text || '')
+      setGender(data.gender || 'male')
+      setAge(data.age || 25)
+      setWeightKg(data.weight_kg || 65)
       setParsedProfile(data)
     } catch {
       setParsedProfile(null)
@@ -144,6 +156,9 @@ function App() {
           deficiencies_text: deficienciesText,
           supplements_text: supplementsText,
           health_report_text: healthReportText,
+          gender,
+          age,
+          weight_kg: weightKg,
         }),
       })
       setParsedProfile(data)
@@ -212,6 +227,25 @@ function App() {
     setProfileOpen(false)
   }
 
+  const submitNutritionQuery = async () => {
+    if (!user || !queryText) return
+    setQueryLoading(true)
+    setMessage('')
+    try {
+      const data = await apiRequest(`/users/${user.id}/nutrition-query`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ query: queryText }),
+      })
+      setQueryResponse(data.response || 'No response received.')
+      setPage('query')
+    } catch (error) {
+      setQueryResponse(`Error: ${error.message}`)
+    } finally {
+      setQueryLoading(false)
+    }
+  }
+
   useEffect(() => {
     document.documentElement.dataset.theme = theme
   }, [theme])
@@ -221,6 +255,21 @@ function App() {
       loadReportDetails(user.id, selectedDate)
     }
   }, [selectedDate])
+
+  const computeNotifications = (details, date) => {
+    if (!details) return []
+    const today = new Date().toISOString().slice(0, 10)
+    const isToday = !date || date === today
+    const coverage = (details.meals || []).map((m) => (m.meal_type || '').toLowerCase())
+    const missed = ['breakfast', 'lunch', 'dinner'].filter((t) => !coverage.includes(t))
+    if (!isToday || !missed.length) return []
+    const hour = new Date().getHours()
+    const msgs = []
+    if (missed.includes('breakfast') && hour >= 10) msgs.push('You missed breakfast today. Consider logging what you had.')
+    if (missed.includes('lunch') && hour >= 14) msgs.push('You missed lunch today. Try to log it for a complete report.')
+    if (missed.includes('dinner') && hour >= 20) msgs.push('You missed dinner today. Add it when convenient.')
+    return msgs
+  }
 
   useEffect(() => {
     if (!mealId) return undefined
@@ -234,6 +283,8 @@ function App() {
           window.clearInterval(timer)
           loadHistory()
         }
+        const msgs = computeNotifications(data, selectedDate)
+        setNotifications(msgs)
       } catch (error) {
         setReport({ status: 'ERROR', summary: error.message, recommendations: [], safety_note: '' })
         window.clearInterval(timer)
@@ -241,6 +292,13 @@ function App() {
     }, 3000)
     return () => window.clearInterval(timer)
   }, [mealId, selectedDate])
+
+  useEffect(() => {
+    // recompute notifications when reportDetails or selectedDate changes
+    setNotifications(computeNotifications(reportDetails, selectedDate))
+    const poll = setInterval(() => setNotifications(computeNotifications(reportDetails, selectedDate)), 300000)
+    return () => clearInterval(poll)
+  }, [reportDetails, selectedDate])
 
   if (!user) {
     return (
@@ -287,12 +345,19 @@ function App() {
             onUpdateProfile={showProfile}
             onLogout={logout}
           />
+          <NotificationBanner notifications={notifications} onClose={() => setNotifications([])} />
           {page === 'profile' && (
             <ProfilePage
               goals={goals}
               toggleGoal={toggleGoal}
               dietType={dietType}
               setDietType={setDietType}
+              gender={gender}
+              setGender={setGender}
+              age={age}
+              setAge={setAge}
+              weightKg={weightKg}
+              setWeightKg={setWeightKg}
               healthConditionsText={healthConditionsText}
               setHealthConditionsText={setHealthConditionsText}
               deficienciesText={deficienciesText}
@@ -335,6 +400,21 @@ function App() {
               loadReportDetails={() => loadReportDetails(user.id)}
               report={report}
               reportDetails={reportDetails}
+              profile={{
+                ...parsedProfile,
+                gender,
+                age,
+                weight_kg: weightKg,
+              }}
+            />
+          )}
+          {page === 'query' && (
+            <QueryPage
+              queryText={queryText}
+              setQueryText={setQueryText}
+              submitNutritionQuery={submitNutritionQuery}
+              queryResponse={queryResponse}
+              queryLoading={queryLoading}
             />
           )}
           {page === 'history' && (

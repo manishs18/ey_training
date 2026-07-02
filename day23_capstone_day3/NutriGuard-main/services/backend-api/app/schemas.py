@@ -1,6 +1,6 @@
 from pydantic import BaseModel, EmailStr
 from pydantic import Field
-from datetime import datetime
+from datetime import datetime, date
 from typing import List, Optional
 
 
@@ -21,6 +21,19 @@ class UserProfileCreate(BaseModel):
     supplements: Optional[List[str]] = None
     supplements_text: Optional[str] = None
     health_report_text: Optional[str] = None
+    gender: Optional[str] = None
+    age: Optional[int] = None
+    weight_kg: Optional[float] = None
+
+
+class NutritionQueryInput(BaseModel):
+    query: str
+    target_date: Optional[date] = None
+
+
+class NutritionQueryResponse(BaseModel):
+    query: str
+    response: str
 
 
 class UserLogin(BaseModel):

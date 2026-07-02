@@ -3,13 +3,47 @@ from typing import Dict, Any
 from app.llm.gemini_client import gemini_client
 
 
-def _fallback_report(meal_analysis: Dict[str, Any], risk_flags: list) -> str:
+def _fallback_report(
+    meal_analysis: Dict[str, Any],
+    risk_flags: list,
+    meal_text: str | None = None,
+    day_meals: list | None = None,
+) -> str:
     foods = meal_analysis.get("foods", [])
+    beverages = meal_analysis.get("beverages", [])
 
-    summary = f"Today's Nutrition Summary\n\nYou had {', '.join(foods)}."
-    recommendations = []
+    if foods and beverages:
+        summary = f"Today's Nutrition Summary\n\nYou had {', '.join(foods + beverages)}."
+    elif foods:
+        summary = f"Today's Nutrition Summary\n\nYou had {', '.join(foods)}."
+    elif beverages:
+        summary = f"Today's Nutrition Summary\n\nYou had {', '.join(beverages)}."
+    elif meal_text:
+        text = ' '.join(line.strip() for line in meal_text.splitlines() if line.strip())
+        summary = f"Today's Nutrition Summary\n\nYou had {text}."
+    elif day_meals:
+        day_text = []
+        for item in day_meals:
+            text = item.get("meal_text") or ""
+            if text:
+                day_text.append(text.strip())
+        combined = "; ".join(day_text)
+        summary = f"Today's Nutrition Summary\n\nYou had {combined}." if combined else "Today's Nutrition Summary\n\nYou had a logged meal."
+    else:
+        summary = "Today's Nutrition Summary\n\nYou had a logged meal."
+
     safety_note = "Follow your doctor's advice for iron supplements."
 
+    attention_lines = []
+    for flag in risk_flags:
+        message = flag.get("message")
+        if message:
+            attention_lines.append(f"- {message}")
+
+    if not attention_lines:
+        attention_lines.append("- Keep meals balanced and log protein or hydration clearly.")
+
+    recommendations = []
     if any(flag.get("type") == "low_protein" for flag in risk_flags):
         recommendations.append(
             "Add protein such as sprouts, curd, paneer, tofu, chana, or soy chunks."
@@ -32,8 +66,8 @@ def _fallback_report(meal_analysis: Dict[str, Any], risk_flags: list) -> str:
     recommendation_lines = "\n".join(f"- {item}" for item in recommendations)
     report = (
         f"{summary}\n\n"
-        f"Needs Attention:\n- Breakfast has low protein.\n"
-        f"- Since you have iron deficiency, tea near meals may not be ideal.\n\n"
+        f"Needs Attention:\n"
+        f"{chr(10).join(attention_lines)}\n\n"
         f"Suggestions:\n{recommendation_lines}\n\n"
         f"Safety:\n- {safety_note}"
     )
@@ -56,6 +90,7 @@ def report_agent(state: Dict[str, Any]) -> Dict[str, Any]:
     day_meals = state.get("day_meals") or []
     health_report_text = (state.get("health_report_text") or "")[:6000]
     context = state.get("context") or []
+    meal_text = state.get("meal_text")
 
     try:
         report = gemini_client.generate_text(
@@ -103,8 +138,10 @@ Risk flags: {risk_flags}
 Retrieved context: {context}
 """
         )
+        if not report or report.strip().endswith("You had ."):
+            raise ValueError("Incomplete report from LLM")
     except Exception:
-        report = _fallback_report(meal_analysis, risk_flags)
+        report = _fallback_report(meal_analysis, risk_flags, meal_text, day_meals)
 
     return {
         **state,

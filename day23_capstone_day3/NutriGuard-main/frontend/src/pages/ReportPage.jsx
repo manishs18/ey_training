@@ -1,6 +1,10 @@
 import { mealField } from '../utils/meal'
+import { buildDashboardInsight, buildMealCoverage } from '../utils/reportDashboard'
 
-export default function ReportPage({ selectedDate, setSelectedDate, loadReportDetails, report, reportDetails }) {
+export default function ReportPage({ selectedDate, setSelectedDate, loadReportDetails, report, reportDetails, profile }) {
+  const coverage = buildMealCoverage(reportDetails?.meals || [])
+  const insight = buildDashboardInsight(profile || {}, reportDetails?.meals || [], report?.summary || '')
+
   return (
     <section className="panel page-panel report">
       <div className="report-head">
@@ -13,6 +17,50 @@ export default function ReportPage({ selectedDate, setSelectedDate, loadReportDe
           <input type="date" value={selectedDate} onChange={(event) => setSelectedDate(event.target.value)} />
         </label>
         <button onClick={loadReportDetails}>Load report</button>
+      </div>
+      <div className="dashboard-grid">
+        <div className="dashboard-card">
+          <h3>Meal coverage</h3>
+          <div className="metric-grid">
+            {coverage.items.map((item) => (
+              <div className={`metric-card ${item.status}`} key={item.key}>
+                <span>{item.label}</span>
+                <strong>{item.status === 'logged' ? 'Logged' : 'Missed'}</strong>
+                <small>{item.note}</small>
+              </div>
+            ))}
+          </div>
+          <p className="muted">Coverage score: {coverage.coveragePercent}%</p>
+        </div>
+        <div className="dashboard-card">
+          <h3>Profile snapshot</h3>
+          <ul className="check-list">
+            {insight.profileSummary.map((item) => <li key={item}>{item}</li>)}
+            {!insight.profileSummary.length && <li>No profile data saved yet.</li>}
+          </ul>
+        </div>
+      </div>
+      <div className="dashboard-grid">
+        <div className="dashboard-card">
+          <h3>Good habits</h3>
+          <ul className="check-list">
+            {insight.goodHabits.map((item) => <li key={item}>{item}</li>)}
+            {!insight.goodHabits.length && <li>Keep logging meals consistently for stronger guidance.</li>}
+          </ul>
+        </div>
+        <div className="dashboard-card">
+          <h3>Needs attention</h3>
+          <ul className="check-list">
+            {insight.needsAttention.map((item) => <li key={item}>{item}</li>)}
+            {!insight.needsAttention.length && <li>Everything looks balanced for this day.</li>}
+          </ul>
+        </div>
+      </div>
+      <div className="dashboard-card">
+        <h3>Diet plan</h3>
+        <ul className="check-list">
+          {insight.dietPlan.map((item) => <li key={item}>{item}</li>)}
+        </ul>
       </div>
       {reportDetails?.meals?.length > 0 && (
         <div className="timeline">
